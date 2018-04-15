@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="1.0" type="plugin" group="content" method="upgrade">
+    <name>Content - Notifier</name>
+    <author>Bruce Scherzinger</author>
+    <creationDate>April 2018</creationDate>
+    <copyright>Copyright (C) 2018 Bruce Scherzinger. All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <authorEmail>joomlander@scherzinger.org</authorEmail>
+    <authorUrl>scherzinger.org</authorUrl>
+    <version>3.0.0</version>
+    <description>Content Notifier Plugin. Sends email notifications to designated email address(es) when articles are added to or modified in selected categories. ....................................................................................................... 
+    <![CDATA[
+            <h3>Content Notifier Plug-In v1.0</h3>
+            <address>&copy; 2018 Bruce Scherzinger</address>
+            <p>Allows the site admin to subscribe/unsubscribe one or more email addresses to be
+            notified when an article in selected categories is created or modified.</p>
+            <p>Special tags you can insert into email notice message fragments are as follows:</p>
+            <table border=1 cellspacing=0 cellpadding=1>
+            <tr>
+                <th>Tag</th><th>What is Inserted</th><th>In Message Parts</th>
+            </tr>
+            <tr>
+                <td>[SITE]</td><td>Name of the website.</td><td>Subject,Body</td>
+            </tr>
+            <tr>
+                <td>[CATEGORY]</td><td>Category the article is contained in.</td><td>Subject,Body</td>
+            </tr>
+            <tr>
+                <td>[ACTION]</td><td>Single word indicating what just happened to the article.</td><td>Subject,Body</td>
+            <tr>
+                <td>[LINK]</td><td>SEF URL of the article.</td><td>Body</td>
+            </tr>
+            <tr>
+                <td>[INTROTEXT]</td><td>Article intro text.</td><td>Body</td>
+            </tr>
+            <tr>
+                <td>[FULLTEXT]</td><td>Article full text.</td><td>Body</td>
+            </tr>
+            </table>
+            <p>One notification will be sent to each group subscribed to the category for each article that changed.</p>
+    ]]>
+    </description>
+
+    <files>
+        <filename plugin="notifier">notifier.php</filename>
+        <filename plugin="notifier">notifiergroup.xml</filename>
+    </files>
+    <languages>
+    </languages>
+    <config>
+        <fields name="params">
+            <fieldset name="setup" label="Parameters">
+				<field name="format" type="radio"
+					label="Format as HTML:"
+					description="Prepare the content as HTML. If no, then plain text. Enter your subscription group templates in the appropriate box."
+					class="btn-group btn-group-yesno"
+					default="0">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field
+					name="prepare_content"
+					type="radio"
+					label="Prepare Content:"
+					description="Optionally prepare the content with the Joomla content plugins. Only works with HTML format."
+					class="btn-group btn-group-yesno"
+					default="0"
+					>
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+                <field name="from_addr" type="email"
+                    label="From Address:"
+                    description="(optional) Email FROM address for sending all notifications. If left blank, site default address is used."
+                    class="inputbox"
+                    size="50"
+                    validate="email"
+                />
+                <field name="from_name" type="text"
+                    label="From Name:"
+                    description="(optional) Email FROM name for sending all notifications."
+                    size="50"
+                />
+                <field name="email_subject" type="text"
+                    label="Email Subject:"
+                    description="(optional) Text for email subject."
+                    size="50"
+                />
+				<field name="subgroups" type="subform"
+					label="Subscription Groups:"
+					description="Each subscription group has a set of fields."
+                    formsource="/plugins/content/notifier/notifiergroup.xml"
+                    multiple="true"
+                    min="1"
+                    max="10"
+                    layout="joomla.form.field.subform.repeatable"
+				/>
+            </fieldset>
+        </fields>
+    </config>
+</extension>
