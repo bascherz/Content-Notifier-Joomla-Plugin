@@ -36,6 +36,15 @@
             <tr>
                 <td>[FULLTEXT]</td><td>Article full text.</td><td>Body</td>
             </tr>
+            <tr>
+                <td>[ALIAS]</td><td>Article alias.</td><td>Body</td>
+            </tr>
+            <tr>
+                <td>[CREATED]</td><td>Article creation date.</td><td>Body</td>
+            </tr>
+            <tr>
+                <td>[MODIFIED]</td><td>Article modified date.</td><td>Body</td>
+            </tr>
             </table>
             <p>One notification will be sent to each group subscribed to the category for each article that changed.</p>
     ]]>
@@ -50,25 +59,6 @@
     <config>
         <fields name="params">
             <fieldset name="setup" label="Parameters">
-				<field name="format" type="radio"
-					label="Format as HTML:"
-					description="Prepare the content as HTML. If no, then plain text. Enter your subscription group templates in the appropriate box."
-					class="btn-group btn-group-yesno"
-					default="0">
-					<option value="1">JYES</option>
-					<option value="0">JNO</option>
-				</field>
-				<field
-					name="prepare_content"
-					type="radio"
-					label="Prepare Content:"
-					description="Optionally prepare the content with the Joomla content plugins. Only works with HTML format."
-					class="btn-group btn-group-yesno"
-					default="0"
-					>
-					<option value="1">JYES</option>
-					<option value="0">JNO</option>
-				</field>
                 <field name="from_addr" type="email"
                     label="From Address:"
                     description="(optional) Email FROM address for sending all notifications. If left blank, site default address is used."
@@ -86,15 +76,15 @@
                     description="(optional) Text for email subject."
                     size="50"
                 />
-				<field name="subgroups" type="subform"
-					label="Subscription Groups:"
-					description="Each subscription group has a set of fields."
+                <field name="subgroups" type="subform"
+                    label="Subscription Groups:"
+                    description="Each subscription group has a set of fields."
                     formsource="/plugins/content/notifier/notifiergroup.xml"
                     multiple="true"
                     min="1"
                     max="10"
                     layout="joomla.form.field.subform.repeatable"
-				/>
+                />
             </fieldset>
         </fields>
     </config>

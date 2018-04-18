@@ -118,7 +118,7 @@ class plgContentNotifier extends JPlugin
         $recipient = str_replace(" ","",$recipient);  // strip all spaces
 
         // Replace notice message placeholders
-        $format = intval($params->get('format',"0"));
+        $format = intval($group->format);
         if ($format)
         {
             // HTML format
@@ -126,10 +126,10 @@ class plgContentNotifier extends JPlugin
                 '<p>[CATEGORY] article [TITLE] has been [ACTION].</p><p>'.$article_link.'</p>' :
                 $group->htmltemplate;
             $message = html_entity_decode(str_replace(
-                array('[SITE]','[CATEGORY]','[ACTION]','[TITLE]','[LINK]','[INTROTEXT]','[FULLTEXT]'),
-                array($mainframe->getCfg('sitename'),$category->title,$action,'"'.$article->title.'"',$article_link,$article->introtext,$article->fulltext),$message),
+                array('[SITE]','[CATEGORY]','[ACTION]','[TITLE]','[LINK]','[INTROTEXT]','[FULLTEXT]','[ALIAS]','[MODIFIED]','[CREATED]'),
+                array($mainframe->getCfg('sitename'),$category->title,$action,'"'.$article->title.'"',$article_link,$article->introtext,$article->fulltext,$article->alias,$article->modified,$article->created),$message),
                 ENT_QUOTES);
-            if ($params->get('prepare_content',"0") == "1")
+            if ($group->prepare_content == "1")
             {
                 $message  = JHtml::_('content.prepare', $message);
             }
@@ -141,13 +141,13 @@ class plgContentNotifier extends JPlugin
                 "[CATEGORY] article [TITLE] has been [ACTION].\n\nVisit the link below to read it.\n\n$article_link" :
                 $group->texttemplate;
             $message = html_entity_decode(str_replace(
-                array('[SITE]','[CATEGORY]','[ACTION]','[TITLE]','[LINK]'),
-                array($mainframe->getCfg('sitename'),$category->title,$action,'"'.$article->title.'"',$article_link),$message),
+                array('[SITE]','[CATEGORY]','[ACTION]','[TITLE]','[LINK]','[ALIAS]','[MODIFIED]','[CREATED]'),
+                array($mainframe->getCfg('sitename'),$category->title,$action,'"'.$article->title.'"',$article_link,$article->alias,$article->modified,$article->created),$message),
                 ENT_QUOTES);
         }
 
         // Replace notice message SUBJECT placeholders
-        $subject = ($group->subject == "") ? '[SITE] [CATEGORY] Article [ACTION]' : $group->subject;
+        $subject = $params->get('email_subject','[SITE] [CATEGORY] Article [ACTION]');
         $subject = html_entity_decode(str_replace(
                     array('[SITE]','[CATEGORY]','[ACTION]'),
                     array($mainframe->getCfg('sitename'),$category->title,$action),$subject),
