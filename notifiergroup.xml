@@ -17,14 +17,11 @@
         <option value="1">JYES</option>
         <option value="0">JNO</option>
     </field>
-    <field
-        name="prepare_content"
-        type="radio"
+    <field name="prepare_content" type="radio"
         label="Prepare Content:"
         description="Optionally prepare the content with the Joomla content plugins. Only works with HTML format."
         class="btn-group btn-group-yesno"
-        default="0"
-        >
+        default="0">
         <option value="1">JYES</option>
         <option value="0">JNO</option>
     </field>
@@ -34,14 +31,16 @@
         extension="com_content"
         multiple="true"
     />
-    
     <field name="address" type="email"
-        label="Address:"
+        label="To:"
         description="Email address(es) to receive notifications for this group's Categories. Comma-separated if multiple."
         class="inputbox"
         validate="email"
     />
-
+    <field name="email_subject" type="text"
+        label="Subject:"
+        description="(optional) Text for email subject."
+    />
     <field name="htmltemplate" type="editor"
         label="HTML Template:"
         description="Enter the HTML layout for messages sent to this group's Address. Insert [LINK] where you want the link to the article to appear."
@@ -49,13 +48,11 @@
         default=""
         height="80"                    
     />
-
     <field name="texttemplate" type="textarea"
         label="Text Template:"
         description="Enter the layout for messages sent to this group's Address. Insert [LINK] where you want the link to the article to appear."
         editor="none"
-        rows="8"
-        cols="300"
+        rows="4"
         default=""
     />
 </form>

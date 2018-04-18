@@ -71,11 +71,6 @@
                     description="(optional) Email FROM name for sending all notifications."
                     size="50"
                 />
-                <field name="email_subject" type="text"
-                    label="Email Subject:"
-                    description="(optional) Text for email subject."
-                    size="50"
-                />
                 <field name="subgroups" type="subform"
                     label="Subscription Groups:"
                     description="Each subscription group has a set of fields."

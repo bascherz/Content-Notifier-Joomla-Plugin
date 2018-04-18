@@ -94,7 +94,7 @@ class plgContentNotifier extends JPlugin
         $mainframe = JFactory::getApplication();
 
         // Setup a mailer
-	    $mailer = JFactory::getMailer();
+        $mailer = JFactory::getMailer();
 
         // Point to plug-in parameters
         $params = $this->params;
@@ -147,7 +147,7 @@ class plgContentNotifier extends JPlugin
         }
 
         // Replace notice message SUBJECT placeholders
-        $subject = $params->get('email_subject','[SITE] [CATEGORY] Article [ACTION]');
+        $subject = ($group->email_subject != '' ? $group->email_subject : '[SITE] [CATEGORY] Article [ACTION]');
         $subject = html_entity_decode(str_replace(
                     array('[SITE]','[CATEGORY]','[ACTION]'),
                     array($mainframe->getCfg('sitename'),$category->title,$action),$subject),
