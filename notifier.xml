@@ -28,7 +28,7 @@
             <tr>
                 <td>[ACTION]</td><td>Single word indicating what just happened to the article.</td><td>Subject,Body</td>
             <tr>
-                <td>[LINK]</td><td>SEF URL of the article.</td><td>Body</td>
+                <td>[LINK]</td><td>Non-SEF URL of the article.</td><td>Body</td>
             </tr>
             <tr>
                 <td>[INTROTEXT]</td><td>Article intro text.</td><td>Body</td>

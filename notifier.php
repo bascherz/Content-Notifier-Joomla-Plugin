@@ -106,9 +106,9 @@ class plgContentNotifier extends JPlugin
         $cat_alias = $category->alias;
         $cat_title = $category->title;
 
-        // Build SEF article link
-        $article_link = JUri::base().$cat_alias."/".$article->id."-".$article->alias;
-        
+        // Build non-SEF article link
+        $article_link = JUri::base().$cat_alias."?view=article&id=".$article->id.":".$article->alias."&catid=$article->catid";
+
         // Get email addresses
         $from_name = $params->get('from_name',$mainframe->getCfg('fromname'));
         $from_addr = $params->get('from_addr',$mainframe->getCfg('mailfrom'));
