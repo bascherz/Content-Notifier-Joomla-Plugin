@@ -4,8 +4,7 @@
         label="Enable This Group:"
         description="Enable or disable this group."
         class="btn-group btn-group-yesno"
-        default="0"
-        >
+        default="0">
         <option value="1">JYES</option>
         <option value="0">JNO</option>
     </field>
@@ -52,7 +51,7 @@
         label="Text Template:"
         description="Enter the layout for messages sent to this group's Address. Insert [LINK] where you want the link to the article to appear."
         editor="none"
-        rows="4"
         default=""
+        rows="4"
     />
 </form>

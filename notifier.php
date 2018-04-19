@@ -107,7 +107,7 @@ class plgContentNotifier extends JPlugin
         $cat_title = $category->title;
 
         // Build non-SEF article link
-        $article_link = JUri::base().$cat_alias."?view=article&id=".$article->id.":".$article->alias."&catid=$article->catid";
+        $article_link = JURI::base().JRoute::_(ContentHelperRoute::getArticleRoute($article->id,$article->catid));
 
         // Get email addresses
         $from_name = $params->get('from_name',$mainframe->getCfg('fromname'));
