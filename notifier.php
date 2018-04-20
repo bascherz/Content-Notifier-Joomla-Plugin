@@ -14,6 +14,9 @@ defined('_JEXEC') or die;
  *
  * @since  3.8
  */
+
+if(!class_exists('ContentHelperRoute')) require_once (JPATH_SITE . '/components/com_content/helpers/route.php');
+
 class plgContentNotifier extends JPlugin
 {
     /**
