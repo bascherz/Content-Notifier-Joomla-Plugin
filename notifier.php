@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
  * @since  3.8
  */
 
-if(!class_exists('ContentHelperRoute')) require_once (JPATH_SITE . '/components/com_content/helpers/route.php');
+if(!class_exists('ContentHelperRoute')) require_once (JPATH_SITE.'/components/com_content/helpers/route.php');
 
 class plgContentNotifier extends JPlugin
 {
@@ -109,8 +109,8 @@ class plgContentNotifier extends JPlugin
         $cat_alias = $category->alias;
         $cat_title = $category->title;
 
-        // Build non-SEF article link
-        $article_link = JURI::base().JRoute::_(ContentHelperRoute::getArticleRoute($article->id,$article->catid));
+        // Build article link
+        $article_link = str_replace('/administrator','',JURI::base().JRoute::_(ContentHelperRoute::getArticleRoute($article->id,$article->catid)));
 
         // Get email addresses
         $from_name = $params->get('from_name',$mainframe->getCfg('fromname'));
