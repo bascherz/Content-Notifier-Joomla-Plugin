@@ -3,8 +3,8 @@
 	<update>
 		<name>Content Notifier Plugin</name>
 		<description>Joomla! Content Notifier Plugin</description>
-		<element>mod_valueplugger</element>
-		<type>module</type>
+		<element>plg_contentnotifier</element>
+		<type>plugin</type>
 		<version>1.1</version>
 		<client>site</client>
 		<infourl title="Value Plugger Module">https://github.com/bascherz/Content-Notifier-Joomla-Plugin/releases/tag/1.1</infourl>
