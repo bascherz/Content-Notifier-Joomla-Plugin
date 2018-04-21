@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="1.1" type="plugin" group="content" method="upgrade">
+<extension version="1.2" type="plugin" group="content" method="upgrade">
     <name>Content - Notifier</name>
     <author>Bruce Scherzinger</author>
     <creationDate>April 2018</creationDate>
     <copyright>Copyright (C) 2018 Bruce Scherzinger. All rights reserved.</copyright>
-    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <license>GNU General Public License version 3 or later; see LICENSE.txt</license>
     <authorEmail>joomlander@scherzinger.org</authorEmail>
     <authorUrl>scherzinger.org</authorUrl>
-    <version>1.1</version>
+    <version>1.2</version>
     <description>Content Notifier Plugin. Sends email notifications to designated email address(es) when articles are added to or modified in selected categories. ....................................................................................................... 
     <![CDATA[
             <h3>Content Notifier Plug-In v1.1</h3>
@@ -23,18 +23,22 @@
                 <td>[SITE]</td><td>Name of the website.</td><td>Subject,Body</td>
             </tr>
             <tr>
-                <td>[CATEGORY]</td><td>Category the article is contained in.</td><td>Subject,Body</td>
+                <td>[CATEGORY]</td><td>Category containing the article.</td><td>Subject,Body</td>
             </tr>
             <tr>
-                <td>[ACTION]</td><td>Single word indicating what just happened to the article.</td><td>Subject,Body</td>
-            <tr>
-                <td>[LINK]</td><td>Non-SEF URL of the article.</td><td>Body</td>
+                <td>[ACTION]</td><td>Phrase indicating what just happened to the article. See Plugin Settings</td><td>Subject,Body</td>
             </tr>
             <tr>
-                <td>[INTROTEXT]</td><td>Article intro text.</td><td>Body</td>
+                <td>[TITLE]</td><td>Article title.</td><td>Subject,Body</td>
             </tr>
             <tr>
-                <td>[FULLTEXT]</td><td>Article full text.</td><td>Body</td>
+                <td>[INTROTEXT]</td><td>Article intro text.</td><td>Body (HTML only)</td>
+            </tr>
+            <tr>
+                <td>[FULLTEXT]</td><td>Article full text.</td><td>Body (HTML only)</td>
+            </tr>
+            <tr>
+                <td>[LINK]</td><td>URL of the article.</td><td>Body</td>
             </tr>
             <tr>
                 <td>[ALIAS]</td><td>Article alias.</td><td>Body</td>
@@ -46,10 +50,12 @@
                 <td>[MODIFIED]</td><td>Article modified date.</td><td>Body</td>
             </tr>
             </table>
-            <p>One notification will be sent to each group subscribed to the category for each article that changed.</p>
+            <br/><p>One notification will be sent to each group subscribed to the category for each article that changed.</p>
     ]]>
     </description>
-
+    <languages folder="site">
+        <language tag="en-GB">/administrator/language/en-GB/en-GB.com_content.ini</language>
+    </languages>
     <files>
         <filename plugin="notifier">notifier.php</filename>
         <filename plugin="notifier">notifiergroup.xml</filename>
@@ -58,24 +64,49 @@
     </languages>
     <config>
         <fields name="params">
-            <fieldset name="setup" label="Parameters">
+            <fieldset name="setup" label="Settings">
+                <field name="emailsettings" type="note"
+                    label="From Email Settings"
+                    description="These settings are optional. Leaving them empty will cause the site defaults to be used." 
+                />
                 <field name="from_addr" type="email"
                     label="From Address:"
-                    description="(optional) Email FROM address for sending all notifications. If left blank, site default address is used."
+                    description="Email FROM address for sending all notifications."
                     class="inputbox"
                     validate="email"
                 />
                 <field name="from_name" type="text"
                     label="From Name:"
-                    description="(optional) Email FROM name for sending all notifications."
+                    description="Email FROM name for sending all notifications."
+                />
+                <field name="actionsettings" type="note"
+                    label="Action Settings"
+                    description="Rather than use a language override or overload some existing com_content constant, define what you want the [ACTION] tag to contain in these cases." 
+                />
+                <field name="newaction" type="text"
+                    label="New Article:"
+                    description="When an article is just created."
+                />
+                <field name="saveaction" type="text"
+                    label="Updated Article:"
+                    description="When an existing article is updated."
+                />
+            </fieldset>
+            <fieldset name="groups" label="Subscription Groups">
+                <field name="subgroupheading" type="note"
+                    label="Subscription Groups"
+                    description="Each subscription group has a set of fields. The fields in each row are specific to that group." 
                 />
                 <field name="subgroups" type="subform"
-                    label="Subscription Groups:"
-                    description="Each subscription group has a set of fields."
+                    label="Click + to add groups &#8594;"
+                    description="Clicking the button to the right adds a new group to the end. Clicking the + in the lower right
+                    corner of a group box adds a group after that one. Ordering could be relevant, but it is generally not. So using
+                    the group drag handles is probably not useful other than to put the group you use most first."
                     formsource="/plugins/content/notifier/notifiergroup.xml"
                     multiple="true"
                     min="1"
-                    layout="joomla.form.field.subform.repeatable"
+                    groupByFieldset="true"
+                    layout="joomla.form.field.subform.repeatable-table"
                 />
             </fieldset>
         </fields>

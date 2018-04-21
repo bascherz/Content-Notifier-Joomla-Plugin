@@ -46,8 +46,17 @@ class plgContentNotifier extends JPlugin
         // This handler only sends a notification for a published article that was just saved.
         if ($article->state == 1)
         {
+            // Point to plug-in parameters
+            $params = $this->params;
+
+            // Determine the appropriate action
+            if ($isNew)
+                $action = $params->get('newaction');
+            else
+                $action = $params->get('saveaction');
+
             // Send the notification email, if applicable
-            $this->filterNotification($article,"updated");
+            $this->filterNotification($article,$action);
         }
         return true;
     }
@@ -150,10 +159,10 @@ class plgContentNotifier extends JPlugin
         }
 
         // Replace notice message SUBJECT placeholders
-        $subject = ($group->email_subject != '' ? $group->email_subject : '[SITE] [CATEGORY] Article [ACTION]');
+        $subject = ($group->email_subject != '' ? $group->email_subject : '[SITE] [CATEGORY] [TITLE] [ACTION]');
         $subject = html_entity_decode(str_replace(
-                    array('[SITE]','[CATEGORY]','[ACTION]'),
-                    array($mainframe->getCfg('sitename'),$category->title,$action),$subject),
+                    array('[SITE]','[CATEGORY]','[TITLE]','[ACTION]'),
+                    array($mainframe->getCfg('sitename'),$category->title,$article->title,$action),$subject),
                    ENT_QUOTES);
 
         // Build e-mail message
