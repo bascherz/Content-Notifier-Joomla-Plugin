@@ -3,7 +3,7 @@
 	<update>
 		<name>Content Notifier Plugin</name>
 		<description>Joomla! Content Notifier Plugin</description>
-		<element>notifier</element>
+		<element>content.notifier</element>
 		<type>plugin</type>
 		<version>1.1</version>
 		<client>site</client>
