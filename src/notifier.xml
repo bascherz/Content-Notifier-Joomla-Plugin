@@ -53,9 +53,6 @@
             <br/><p>One notification will be sent to each group subscribed to the category for each article that changed.</p>
     ]]>
     </description>
-    <languages folder="site">
-        <language tag="en-GB">/administrator/language/en-GB/en-GB.com_content.ini</language>
-    </languages>
     <files>
         <filename plugin="notifier">notifier.php</filename>
         <filename plugin="notifier">notifiergroup.xml</filename>
