@@ -2,7 +2,7 @@
 /**
  * @package     Joomla.Plugin
  * @subpackage  Content.Notifier
- *
+ * @version     2.0
  * @copyright   Copyright (C) 2018 Bruce Scherzinger. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
@@ -55,10 +55,26 @@ class plgContentNotifier extends JPlugin
             else
                 $action = $params->get('saveaction');
 
+            if ($action)
+                $action = JText::_($action);
+            else
+                $action = JText::_('COM_CONTENT_SAVE_SUCCESS');
+
             // Send the notification email, if applicable
             $this->filterNotification($article,$action);
         }
         return true;
+    }
+
+    /**
+     * Indicate whether event occurred via a front or back end article modification.
+     *
+     * @return  "Front" or "Back"
+     */
+    protected function areaSaved()
+    {
+        // Based on whether the following com_content constant is defined or not.
+        return Jtext::_('PLG_CONTENT_NOTIFIER_AREA');
     }
 
     /**
@@ -83,10 +99,14 @@ class plgContentNotifier extends JPlugin
             // Get list of categories for notification
             $categories = $thisgroup->category;
 
-            // If the category of this article is in the list for notification, then do it.
-            if ($thisgroup->enabled && in_array($article->catid,$categories))
+            // First, determine if we even want to send this based on the save occurring in the front or back end of the site.
+            if ($thisgroup->enabled == $this->areaSaved() || $thisgroup->enabled == "Both")
             {
-                $this->sendNotification($thisgroup,$article,$action);
+                // If the category of this article is in the list for notification, then do it.
+                if (in_array($article->catid,$categories))
+                {
+                    $this->sendNotification($thisgroup,$article,$action);
+                }
             }
         }
     }
@@ -131,15 +151,15 @@ class plgContentNotifier extends JPlugin
 
         // Replace notice message placeholders
         $format = intval($group->format);
-        if ($format)
+        if ($format == "HTML")
         {
             // HTML format
             $message = ($group->htmltemplate == "") ?
                 '<p>[CATEGORY] article [TITLE] has been [ACTION].</p><p>'.$article_link.'</p>' :
                 $group->htmltemplate;
             $message = html_entity_decode(str_replace(
-                array('[SITE]','[CATEGORY]','[ACTION]','[TITLE]','[LINK]','[INTROTEXT]','[FULLTEXT]','[ALIAS]','[MODIFIED]','[CREATED]'),
-                array($mainframe->getCfg('sitename'),$category->title,$action,'"'.$article->title.'"',$article_link,$article->introtext,$article->fulltext,$article->alias,$article->modified,$article->created),$message),
+                array('[SITE]','[CATEGORY]','[ACTION]','[TITLE]','[LINK]','[INTROTEXT]','[FULLTEXT]','[ALIAS]','[MODIFIED]','[CREATED]','[AREA]'),
+                array($mainframe->getCfg('sitename'),$category->title,$action,'"'.$article->title.'"',$article_link,$article->introtext,$article->fulltext,$article->alias,$article->modified,$article->created,$this->areaSaved()),$message),
                 ENT_QUOTES);
             if ($group->prepare_content == "1")
             {
@@ -170,7 +190,7 @@ class plgContentNotifier extends JPlugin
         $mailer->addRecipient($recipient);
         $mailer->setSubject($subject);
         $mailer->setBody($message);
-        $mailer->IsHTML($format);
+        $mailer->IsHTML($format == "HTML");
 
         // Send notification email to administrator
         $mailer->Send();

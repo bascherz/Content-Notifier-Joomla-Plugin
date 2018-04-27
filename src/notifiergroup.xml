@@ -27,20 +27,22 @@
             description="&lt;p&gt;Flip these switches to control this group.&lt;/p&gt;" 
         />
         <field name="enabled" type="radio"
-            label="Enable This Group:"
-            description="Enable or disable this group."
-            class="btn-group btn-group-yesno"
+            label="Group Enabled In:"
+            description="Select whether to send email on front or back end article modifications, both, or neither (disabled)."
+            class="btn-group btn-group"
             default="0">
-            <option value="1">JYES</option>
-            <option value="0">JNO</option>
+            <option value="Front">Front</option>
+            <option value="Back">Back</option>
+            <option value="Both">Both</option>
+            <option value="0">Neither</option>
         </field>
         <field name="format" type="radio"
-            label="Format as HTML:"
-            description="Prepare the content as HTML. If no, then use plain text. Enter your subscription group template in the appropriate box."
+            label="Email Format:"
+            description="Prepare the content as HTML or Plain Text. Enter your subscription group template in the appropriate box on the right."
             class="btn-group btn-group-yesno"
             default="0">
-            <option value="1">JYES</option>
-            <option value="0">JNO</option>
+            <option value="HTML">HTML</option>
+            <option value="Text">Text</option>
         </field>
         <field name="prepare_content" type="radio"
             label="Prepare Content:"

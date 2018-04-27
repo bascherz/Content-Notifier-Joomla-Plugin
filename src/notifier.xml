@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="1.2" type="plugin" group="content" method="upgrade">
+<extension version="2.0" type="plugin" group="content" method="upgrade">
     <name>Content - Notifier</name>
     <author>Bruce Scherzinger</author>
     <creationDate>April 2018</creationDate>
@@ -7,7 +7,7 @@
     <license>GNU General Public License version 3 or later; see LICENSE.txt</license>
     <authorEmail>joomlander@scherzinger.org</authorEmail>
     <authorUrl>scherzinger.org</authorUrl>
-    <version>1.2</version>
+    <version>2.0</version>
     <description>Content Notifier Plugin. Sends email notifications to designated email address(es) when articles are added to or modified in selected categories. ....................................................................................................... 
     <![CDATA[
             <h3>Content Notifier Plug-In v1.2</h3>
@@ -49,8 +49,18 @@
             <tr>
                 <td>[MODIFIED]</td><td>Article modified date.</td><td>Body</td>
             </tr>
+            <tr>
+                <td>[AREA]</td><td>Site area where article was saved ("Front" or "Back").</td><td>Body</td>
+            </tr>
             </table>
-            <br/><p>One notification will be sent to each group subscribed to the category for each article that changed.</p>
+            <br/>
+            <p>One notification will be sent to each group subscribed to the category for each article that changed.</p>
+            <p><strong>If you wish to be able to select whether each group sends an email based on where the article was saved (site front or back end), you must define two language overrides for PLG_CONTENT_NOTIFIER_AREA as follows:</strong></p>
+            <ul>
+            <li>Administrator: "Back"</li>
+            <li>Site: "Front"</li>
+            </ul>
+            <p>If you do not define this, you can only enable subscription groups using the Both option. Front, Back, and Neither options will all disable the group.</p>
     ]]>
     </description>
     <files>
@@ -78,15 +88,15 @@
                 />
                 <field name="actionsettings" type="note"
                     label="Action Settings"
-                    description="Rather than use a language override or overload some existing com_content constant, define what you want the [ACTION] tag to contain in these cases." 
+                    description="You can use either a language override or existing constant, or you can just enter your phrases here to define what you want the [ACTION] tag to contain in these cases. If you leave either box empty, the default is COM_CONTENT_SAVE_SUCCESS."
                 />
                 <field name="newaction" type="text"
                     label="New Article:"
-                    description="When an article is just created."
+                    description="Language constant to use when an article is just created."
                 />
                 <field name="saveaction" type="text"
                     label="Updated Article:"
-                    description="When an existing article is updated."
+                    description="Language constant to use when an article is just updated."
                 />
             </fieldset>
             <fieldset name="groups" label="Subscription Groups">
