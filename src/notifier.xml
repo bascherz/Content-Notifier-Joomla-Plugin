@@ -38,7 +38,10 @@
                 <td>[FULLTEXT]</td><td>Article full text.</td><td>Body (HTML only)</td>
             </tr>
             <tr>
-                <td>[LINK]</td><td>URL of the article.</td><td>Body</td>
+                <td>[LINK]</td><td>Full link of the article. Use if you have your site editor configured to use relative links or you are just inserting the placeholder into the article directly.</td><td>Body</td>
+            </tr>
+            <tr>
+                <td>[LINKREL]</td><td>Relative link of the article. Use if you  have your site editor configured to use absolute links.</td><td>Body</td>
             </tr>
             <tr>
                 <td>[ALIAS]</td><td>Article alias.</td><td>Body</td>

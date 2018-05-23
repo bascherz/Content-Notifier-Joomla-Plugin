@@ -138,8 +138,10 @@ class plgContentNotifier extends JPlugin
         $cat_alias = $category->alias;
         $cat_title = $category->title;
 
-        // Build article link
-        $article_link = str_replace('/administrator','',JURI::base().JRoute::_(ContentHelperRoute::getArticleRoute($article->id,$article->catid)));
+        // Build article links
+        $rel_link = str_replace('/administrator','',JRoute::_(ContentHelperRoute::getArticleRoute($article->id,$article->catid)));
+        $abs_link = JURI::base().$rel_link;
+        $abs_link = str_replace(':/','://',str_replace('//','/',$abs_link));
 
         // Get email addresses
         $from_name = $params->get('from_name',$mainframe->getCfg('fromname'));
@@ -158,8 +160,8 @@ class plgContentNotifier extends JPlugin
                 '<p>[CATEGORY] article [TITLE] has been [ACTION].</p><p>'.$article_link.'</p>' :
                 $group->htmltemplate;
             $message = html_entity_decode(str_replace(
-                array('[SITE]','[CATEGORY]','[ACTION]','[TITLE]','[LINK]','[INTROTEXT]','[FULLTEXT]','[ALIAS]','[MODIFIED]','[CREATED]','[AREA]'),
-                array($mainframe->getCfg('sitename'),$category->title,$action,'"'.$article->title.'"',$article_link,$article->introtext,$article->fulltext,$article->alias,$article->modified,$article->created,$this->areaSaved()),$message),
+                array('[SITE]','[CATEGORY]','[ACTION]','[TITLE]','[LINK]','[LINKREL]','[INTROTEXT]','[FULLTEXT]','[ALIAS]','[MODIFIED]','[CREATED]','[AREA]'),
+                array($mainframe->getCfg('sitename'),$category->title,$action,'"'.$article->title.'"',$abs_link,$rel_link,$article->introtext,$article->fulltext,$article->alias,$article->modified,$article->created,$this->areaSaved()),$message),
                 ENT_QUOTES);
             if ($group->prepare_content == "1")
             {
