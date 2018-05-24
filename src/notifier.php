@@ -140,7 +140,7 @@ class plgContentNotifier extends JPlugin
 
         // Build article links
         $rel_link = str_replace('/administrator','',JRoute::_(ContentHelperRoute::getArticleRoute($article->id,$article->catid)));
-        $abs_link = JURI::base().$rel_link;
+        $abs_link = str_replace('/administrator','',JURI::base().$rel_link);
         $abs_link = str_replace(':/','://',str_replace('//','/',$abs_link));
 
         // Get email addresses
