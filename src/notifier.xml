@@ -7,10 +7,10 @@
     <license>GNU General Public License version 3 or later; see LICENSE.txt</license>
     <authorEmail>joomlander@scherzinger.org</authorEmail>
     <authorUrl>scherzinger.org</authorUrl>
-    <version>2.2</version>
+    <version>2.3</version>
     <description>Content Notifier Plugin. Sends email notifications to designated email address(es) when articles are added to or modified in selected categories. ....................................................................................................... 
     <![CDATA[
-            <h3>Content Notifier Plug-In v2.2</h3>
+            <h3>Content Notifier Plug-In v2.3</h3>
             <address>&copy; 2018 Bruce Scherzinger</address>
             <p>Allows the site admin to subscribe/unsubscribe one or more email addresses to be
             notified when an article in selected categories is created or modified.</p>
