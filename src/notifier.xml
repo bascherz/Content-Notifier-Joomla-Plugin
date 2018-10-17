@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.2" type="plugin" group="content" method="upgrade">
+<extension version="2.3" type="plugin" group="content" method="upgrade">
     <name>Content - Notifier</name>
     <author>Bruce Scherzinger</author>
-    <creationDate>April 2018</creationDate>
+    <creationDate>October 2018</creationDate>
     <copyright>Copyright (C) 2018 Bruce Scherzinger. All rights reserved.</copyright>
     <license>GNU General Public License version 3 or later; see LICENSE.txt</license>
     <authorEmail>joomlander@scherzinger.org</authorEmail>
