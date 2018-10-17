@@ -11,11 +11,10 @@
             extension="com_content"
             multiple="true"
         />
-        <field name="address" type="email"
+        <field name="address" type="text"
             label="To:"
             description="Email address(es) to receive notifications for this group's Categories. Comma-separated if multiple."
             class="inputbox"
-            validate="email"
         />
         <field name="email_subject" type="text"
             label="Subject:"
