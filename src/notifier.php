@@ -2,7 +2,7 @@
 /**
  * @package     Joomla.Plugin
  * @subpackage  Content.Notifier
- * @version     2.0
+ * @version     3.0
  * @copyright   Copyright (C) 2018 Bruce Scherzinger. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 /**
  * Notifier Content Plugin
  *
- * @since  3.8
+ * @since  3.9
  */
 
 if(!class_exists('ContentHelperRoute')) require_once (JPATH_SITE.'/components/com_content/helpers/route.php');
@@ -24,7 +24,7 @@ class plgContentNotifier extends JPlugin
      * If you want to support 3.0 series you must override the constructor
      *
      * @var    boolean
-     * @since  3.8
+     * @since  3.9
      */
     protected $autoloadLanguage = true;
 
@@ -39,7 +39,7 @@ class plgContentNotifier extends JPlugin
      *
      * @return  void
      *
-     * @since   3.8
+     * @since   3.9
      */
     public function onContentAfterSave($context,&$article,$isNew)
     {
@@ -70,6 +70,8 @@ class plgContentNotifier extends JPlugin
      * Indicate whether event occurred via a front or back end article modification.
      *
      * @return  "Front" or "Back"
+     *
+     * @since   3.9
      */
     protected function areaSaved()
     {
@@ -84,6 +86,8 @@ class plgContentNotifier extends JPlugin
      * @param   string   $action   A string describing what just happened to the article.
      *
      * @return  void
+     *
+     * @since   3.9
      */
     protected function filterNotification($article,$action)
     {
@@ -119,6 +123,8 @@ class plgContentNotifier extends JPlugin
      * @param   string   $action   A string describing what just happened to the article.
      *
      * @return  void
+     *
+     * @since   3.9
      */
     protected function sendNotification($group,$article,$action)
     {
@@ -138,10 +144,9 @@ class plgContentNotifier extends JPlugin
         $cat_alias = $category->alias;
         $cat_title = $category->title;
 
-        // Build article links
-        $rel_link = str_replace('/administrator','',JRoute::_(ContentHelperRoute::getArticleRoute($article->id,$article->catid)));
-        $abs_link = str_replace('/administrator','',JURI::base().$rel_link);
-        $abs_link = str_replace(':/','://',str_replace('//','/',$abs_link));
+        // Build article links (Note: only works with Joomla 3.9 or later)
+        $rel_link = JRoute::link('site','index.php?option=com_content&view=article&id='.$article->id); //.'&catid='.$article->catid);
+        $abs_link = JURI::base().$rel_link;
 
         // Get email addresses
         $from_name = $params->get('from_name',$mainframe->getCfg('fromname'));
