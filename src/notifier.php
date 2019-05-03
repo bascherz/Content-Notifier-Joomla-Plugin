@@ -145,8 +145,9 @@ class plgContentNotifier extends JPlugin
         $cat_title = $category->title;
 
         // Build article links (Note: only works with Joomla 3.9 or later)
-        $rel_link = JRoute::link('site','index.php?option=com_content&view=article&id='.$article->id); //.'&catid='.$article->catid);
-        $abs_link = JURI::base().$rel_link;
+        $rel_link = JRoute::link('site','index.php?option=com_content&view=article&id='.$article->id);
+        $site_url = rtrim(JURI::root(),'/');
+        $abs_link = $site_url.$rel_link;
 
         // Get email addresses
         $from_name = $params->get('from_name',$mainframe->getCfg('fromname'));
