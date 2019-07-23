@@ -24,11 +24,11 @@ to make the scheduler do its job in a reasonable amount of time. They also put t
 the site users' interaction with the site.
 
 This is what made me seek-out an external email list system that I could integrate with Joomla. I found Dada Mail which, although it has
-its own web interface, behind that is a power Perl-powered system with batch scheduling and subscriptions that can be stored in a MySQL
+its own web interface, behind that is a Perl-powered system with batch scheduling and subscriptions that can be stored in a MySQL
 database. The database became the medium of exchange between the Joomla site and Dada Mail, and I just had to write a plugin to provide
-the glue, a common thread with these two plugins. The Dada Mail Subscriptions Plugin was originally written for Community Builder (CB)
+the "glue," a common thread with these two plugins. The Dada Mail Subscriptions Plugin was originally written for Community Builder (CB)
 because there were no custom profile fields in Joomla yet, nor did Joomla have the extensive and refined event system CB had.
 
 The Dada Mail Subscriptions Plugin allows users to subscribe to individual Dada Mail lists, the email addresses for which you can
 subscribe to Content Notifier subscription groups. All this "glue" is transparent to the site users, but together the two plugins
-create a pretty powerful newsletter extension.
+create a pretty powerful newsletter system.
