@@ -2,8 +2,8 @@
 /**
  * @package     Joomla.Plugin
  * @subpackage  Content.Notifier
- * @version     3.0
- * @copyright   Copyright (C) 2018 Bruce Scherzinger. All rights reserved.
+ * @version     4.0
+ * @copyright   Copyright (C) 2018-2021 Bruce Scherzinger. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -46,24 +46,96 @@ class plgContentNotifier extends JPlugin
         // This handler only sends a notification for a published article that was just saved.
         if ($article->state == 1)
         {
-            // Point to plug-in parameters
-            $params = $this->params;
+            // And also, if there is a send-mode custom field, get it and some other info
+            $emailmode = $this->emailMode($article);
+            $this->debuginfo = $emailmode;
 
-            // Determine the appropriate action
-            if ($isNew)
-                $action = $params->get('newaction');
-            else
-                $action = $params->get('saveaction');
+            // If there is no send-mode field or the user did not specify 'Do NOT Send', we can proceed.            
+            if (!$emailmode || $emailmode->Value != 'Do NOT Send')
+            {
+                // Reset the parameter to the default value if requested.
+                $this->resetMode($emailmode);
 
-            if ($action)
-                $action = JText::_($action);
-            else
-                $action = JText::_('COM_CONTENT_SAVE_SUCCESS');
-
-            // Send the notification email, if applicable
-            $this->filterNotification($article,$action);
+                // Point to plug-in parameters
+                $params = $this->params;
+    
+                // Determine the appropriate action
+                if ($isNew)
+                    $action = $params->get('newaction');
+                else
+                    $action = $params->get('saveaction');
+    
+                if ($action)
+                    $action = JText::_($action);
+                else
+                    $action = JText::_('COM_CONTENT_SAVE_SUCCESS');
+    
+                // Send the notification email, if applicable
+                $this->filterNotification($article,$action);
+            }
         }
         return true;
+    }
+
+    /**
+     * Return the Send Mode custom field value if it exists.
+     *
+     * @return  value of the send-mode custom field
+     *
+     * @since   3.9
+     */
+    protected function emailMode($article)
+    {
+        // Get the custom field value (because $article->jcFields doesn't do it)
+        $db = JFactory::getDBO();
+
+        // Create a new query object.
+        $query = $db->getQuery(true);
+
+        // Get the value of the send-mode field.
+        $query
+            ->select(array('v.value as Value', 'f.id as Field', 'f.default_value as Reset', 'c.id as Item'))
+            ->from($db->quoteName('#__fields', 'f'))
+            ->join('LEFT', $db->quoteName('#__fields_values', 'v') . ' ON ' . $db->quoteName('f.id') . ' = ' . $db->quoteName('v.field_id'))
+            ->join('LEFT', $db->quoteName('#__content', 'c') . ' ON ' . $db->quoteName('c.id') . ' = ' . $db->quoteName('v.item_id'))
+            ->where($db->quoteName('c.id') . ' = ' . $article->id)
+            ->where($db->quoteName('f.name') . ' = ' . "'send-mode'");
+
+        // Reset the query using our newly populated query object.
+        $db->setQuery($query);
+
+        // Return the necessary info
+        return $db->loadObject();
+    }
+
+    /**
+     * Reset the Send Mode custom field value to the default value, if it exists.
+     *
+     * @return  nothing
+     *
+     * @since   3.9
+     */
+    protected function resetMode($fieldinfo)
+    {
+        // If 'Send Once' was specified, reset the parameter to the default value.
+        if ($fieldinfo->Value == 'Send Once')
+        {
+            // Get a database object
+            $db = JFactory::getDBO();
+
+            // Fields to update.
+            $fields = $db->quoteName('value') . ' = ' . $db->quote($fieldinfo->Reset);
+            
+            // Conditions for which records should be updated.
+            $conditions = array($db->quoteName('field_id') . ' = ' . $fieldinfo->Field,
+                                $db->quoteName('item_id')  . ' = ' . $db->quote($fieldinfo->Item));
+    
+            // Set the field back to its default value
+            $query = $db->getQuery(true);
+            $query->update($db->quoteName('#__fields_values'))->set($fields)->where($conditions);
+            $db->setQuery($query);
+            $db->execute();
+        }
     }
 
     /**
