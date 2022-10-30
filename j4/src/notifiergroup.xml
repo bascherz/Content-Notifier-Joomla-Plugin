@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <fieldset name="controls" label="Controls">
+        <field name="title" type="text"
+            label="Group Name:"
+            description="Name of this group so it is easier to locate in this list."
+            class="inputbox"
+        />
+        <field name="emailoptions" type="note"
+            label="Email Options"
+            description="&lt;p&gt;Email options specific to this group.&lt;/p&gt;" 
+        />
+        <field name="category" type="category"
+            label="Categories:"
+            description="Select one or more categories to which to send notifications to this group's Address(es)."
+            extension="com_content"
+            multiple="true"
+        />
+        <field name="recipients" type="radio"
+            label="Recipients:"
+            description="Select whether to email the article author, the address below, both, or neither (disabled)."
+            class="btn-group btn-group"
+            default="0">
+            <option value="Author">Author</option>
+            <option value="Address(es)">Address</option>
+            <option value="Both">Both</option>
+            <option value="0">Neither</option>
+        </field>
+        <field name="address" type="text"
+            label="To:"
+            description="Email address(es) to receive notifications for this group's Categories. Comma-separated if multiple."
+            class="inputbox"
+        />
+        <field name="email_subject" type="text"
+            label="Subject:"
+            description="(optional) Text for email subject. If omitted default is [SITE] [CATEGORY] [ACTION]."
+        />
+        <field name="controlspacer" type="spacer" hr="true" />
+        <field name="controloptions" type="note"
+            label="Control Options"
+            description="&lt;p&gt;Flip these switches to control this group.&lt;/p&gt;" 
+        />
+        <field name="enabled" type="radio"
+            label="Group Enabled In:"
+            description="Select whether to send email on front or back end article modifications, both, or neither (disabled)."
+            class="btn-group btn-group"
+            default="0">
+            <option value="Front">Front</option>
+            <option value="Back">Back</option>
+            <option value="Both">Both</option>
+            <option value="0">Neither</option>
+        </field>
+        <field name="format" type="radio"
+            label="Email Format:"
+            description="Prepare the content as HTML or Plain Text. Enter your subscription group template in the appropriate box on the right."
+            class="btn-group btn-group-yesno"
+            default="0">
+            <option value="HTML">HTML</option>
+            <option value="Text">Text</option>
+        </field>
+        <field name="prepare_content" type="radio"
+            label="Prepare Content:"
+            description="Optionally prepare the content with the Joomla content plugins. Only works with HTML format."
+            class="btn-group btn-group-yesno"
+            default="0">
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+    </fieldset>
+    <fieldset name="templates" label="Templates">
+        <field name="htmltemplate" type="editor"
+            label="HTML Template:"
+            description="Enter the HTML layout for messages sent to this group's Address. Insert tags where you want parts of the article to appear."
+            filter="safehtml"
+            default=""
+            height="80"                    
+        />
+        <field name="texttemplate" type="textarea"
+            label="Text Template:"
+            description="Enter the plain text layout for messages sent to this group's Address. Insert tags where you want parts of the article to appear."
+            editor="none"
+            default=""
+            rows="4"
+        />
+    </fieldset>
+</form>
