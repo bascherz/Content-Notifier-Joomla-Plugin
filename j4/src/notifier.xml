@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="4.0" type="plugin" group="content" method="upgrade">
+<extension version="5.0" type="plugin" group="content" method="upgrade">
     <name>Content - Notifier</name>
     <author>Bruce Scherzinger</author>
     <creationDate>Nov 2020</creationDate>
@@ -7,7 +7,7 @@
     <license>GNU General Public License version 3 or later; see LICENSE.txt</license>
     <authorEmail>joomlander@scherzinger.org</authorEmail>
     <authorUrl>scherzinger.org</authorUrl>
-    <version>4.0</version>
+    <version>5.0</version>
     <description>Content Notifier Plugin. Sends email notifications to designated email address(es) when articles are added to or modified in selected categories. ....................................................................................................... 
     <![CDATA[
             <h3>Content Notifier Plug-In v4.0</h3>
