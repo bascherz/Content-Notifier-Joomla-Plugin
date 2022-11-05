@@ -211,7 +211,9 @@ class PlgContentNotifier extends CMSPlugin
 
         // See if we need to send this to the article author, the admin address, or both.
         // If both, make the author the primary.
-        $admin = '';
+        $admin  = "";
+        $author = "";
+        $copied = "";
 
         // Get article author info
         $db->setQuery("SELECT * FROM #__users u JOIN #__comprofiler c WHERE u.id=c.id AND u.id=$article->created_by");

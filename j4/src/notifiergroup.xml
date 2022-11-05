@@ -12,7 +12,7 @@
         />
         <field name="category" type="category"
             label="Categories:"
-            description="Select one or more categories to which to send notifications to this group's Address(es)."
+            description="Select one or more categories to which to send notifications to this group's Address."
             extension="com_content"
             multiple="true"
         />
@@ -22,7 +22,7 @@
             class="btn-group btn-group"
             default="0">
             <option value="Author">Author</option>
-            <option value="Address(es)">Address</option>
+            <option value="Address">Address</option>
             <option value="Both">Both</option>
             <option value="0">Neither</option>
         </field>
