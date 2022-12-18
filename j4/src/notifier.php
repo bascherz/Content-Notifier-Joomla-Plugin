@@ -2,8 +2,8 @@
 /**
  * @package     Joomla.Plugin
  * @subpackage  Content.Notifier
- * @version     4.0
- * @copyright   Copyright (C) 2018-2021 Bruce Scherzinger. All rights reserved.
+ * @version     5.2
+ * @copyright   Copyright (C) 2018-2022 Bruce Scherzinger. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -209,11 +209,11 @@ class PlgContentNotifier extends CMSPlugin
         // Get a database object
         $db = Factory::getDBO();
 
-        // See if we need to send this to the article author, the admin address, or both.
+        // See if we need to send this to the article author, the group address, or both.
         // If both, make the author the primary.
-        $admin  = "";
-        $author = "";
-        $copied = "";
+        $address = "";
+        $author  = "";
+        $copied  = "";
 
         // Get article author info
         $db->setQuery("SELECT * FROM #__users u JOIN #__comprofiler c WHERE u.id=c.id AND u.id=$article->created_by");
@@ -222,8 +222,8 @@ class PlgContentNotifier extends CMSPlugin
         if ($group->recipients == "Address" || $group->recipients == "Both")
         {
             // Add the admin address as a recipient. Allow admin address field to contain multiple addresses.
-            $admin = ($group->address == "") ? $mainframe->getCfg('mailfrom') : $group->address;
-            $admin = str_replace(" ","",$admin);  // strip all spaces
+            $address = ($group->address == "") ? $mainframe->getCfg('mailfrom') : $group->address;
+            $address = str_replace(" ","",$address);  // strip all spaces
         }
         if ($group->recipients == "Author" || $group->recipients == "Both")
         {
@@ -235,19 +235,19 @@ class PlgContentNotifier extends CMSPlugin
             // Set the to: address to the author
             $recipient = $author;
 
-            if ($admin != "")
+            if ($address != "")
             {
                 // Set the cc: address to the specified address.
-                $copied = $admin;
+                $copied = $address;
             }
         }
         else
         {
-            $recipient = $admin;
+            $recipient = $address;
         }
 
         // Only send the email if we have an address.
-        if ($author != "" || $admin != "")
+        if ($recipient != "")
         {
             // Get system email address
             $from_name = $params->get('from_name',$mainframe->getCfg('fromname'));
@@ -265,45 +265,12 @@ class PlgContentNotifier extends CMSPlugin
             $abs_link = $site_url.$rel_link;
     
             // Replace notice message placeholders
-            $format = intval($group->format);
-            if ($format == "HTML")
+            if ($group->format == "HTML")
             {
                 // HTML format
                 $message = ($group->htmltemplate == "") ?
-                    '<p>[CATEGORY] article [TITLE] has been [ACTION].</p><p>'.$article_link.'</p>' :
+                    '<p>[CATEGORY] article [TITLE] has been [ACTION].</p><p>'.$abs_link.'</p>' :
                     $group->htmltemplate;
-                $message = html_entity_decode(str_replace(
-                    array('[SITE]',
-                          '[CATEGORY]',
-                          '[ACTION]',
-                          '[TITLE]',
-                          '[AUTHOR]',
-                          '[FIRST]',
-                          '[LINK]',
-                          '[LINKREL]',
-                          '[INTROTEXT]',
-                          '[FULLTEXT]',
-                          '[ALIAS]',
-                          '[MODIFIED]',
-                          '[CREATED]',
-                          '[AREA]'),
-                    array($mainframe->getCfg('sitename'),
-                          $category->title,
-                          $action,
-                          $article->title,
-                          $created_by->name,
-                          $created_by->firstname,
-                          $abs_link,
-                          $rel_link,
-                          $article->introtext,
-                          $article->fulltext,
-                          $article->alias,
-                          $article->modified,
-                          $article->created,
-                          $this->areaSaved()
-                          ),
-                    $message),
-                    ENT_QUOTES);
                 if ($group->prepare_content == "1")
                 {
                     $message  = JHtml::_('content.prepare', $message);
@@ -315,11 +282,39 @@ class PlgContentNotifier extends CMSPlugin
                 $message = ($group->texttemplate == "") ?
                     "[CATEGORY] article [TITLE] has been [ACTION].\n\nVisit the link below to read it.\n\n$article_link" :
                     $group->texttemplate;
-                $message = html_entity_decode(str_replace(
-                    array('[SITE]','[CATEGORY]','[ACTION]','[TITLE]','[LINK]','[ALIAS]','[MODIFIED]','[CREATED]'),
-                    array($mainframe->getCfg('sitename'),$category->title,$action,'"'.$article->title.'"',$article_link,$article->alias,$article->modified,$article->created),$message),
-                    ENT_QUOTES);
             }
+            $message = html_entity_decode(str_replace(
+                array('[SITE]',
+                      '[CATEGORY]',
+                      '[ACTION]',
+                      '[TITLE]',
+                      '[AUTHOR]',
+                      '[FIRST]',
+                      '[LINK]',
+                      '[LINKREL]',
+                      '[INTROTEXT]',
+                      '[FULLTEXT]',
+                      '[ALIAS]',
+                      '[MODIFIED]',
+                      '[CREATED]',
+                      '[AREA]'),
+                array($mainframe->getCfg('sitename'),
+                      $category->title,
+                      $action,
+                      $article->title,
+                      $created_by->name,
+                      $created_by->firstname,
+                      $abs_link,
+                      $rel_link,
+                      $article->introtext,
+                      $article->fulltext,
+                      $article->alias,
+                      $article->modified,
+                      $article->created,
+                      $this->areaSaved()
+                      ),
+                $message),
+                ENT_QUOTES);
     
             // Replace notice message SUBJECT placeholders
             $subject = ($group->email_subject != '' ? $group->email_subject : '[SITE] [CATEGORY] [TITLE] [ACTION]');
@@ -334,7 +329,7 @@ class PlgContentNotifier extends CMSPlugin
             if ($copied != '') $mailer->addCC($copied);
             $mailer->setSubject($subject);
             $mailer->setBody($message);
-            $mailer->IsHTML($format == "HTML");
+            $mailer->IsHTML($group->format == "HTML");
     
             // Send notification email to administrator
             $mailer->Send();

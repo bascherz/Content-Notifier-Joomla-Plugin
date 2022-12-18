@@ -20,11 +20,11 @@
             label="Recipients:"
             description="Select whether to email the article author, the address below, both, or neither (disabled)."
             class="btn-group btn-group"
-            default="0">
+            default="Neither">
             <option value="Author">Author</option>
             <option value="Address">Address</option>
             <option value="Both">Both</option>
-            <option value="0">Neither</option>
+            <option value="Neither">Neither</option>
         </field>
         <field name="address" type="text"
             label="To:"
@@ -44,11 +44,11 @@
             label="Group Enabled In:"
             description="Select whether to send email on front or back end article modifications, both, or neither (disabled)."
             class="btn-group btn-group"
-            default="0">
+            default="Neither">
             <option value="Front">Front</option>
             <option value="Back">Back</option>
             <option value="Both">Both</option>
-            <option value="0">Neither</option>
+            <option value="Neither">Neither</option>
         </field>
         <field name="format" type="radio"
             label="Email Format:"
