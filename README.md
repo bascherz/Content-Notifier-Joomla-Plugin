@@ -1,6 +1,7 @@
 # Content-Notifier-Joomla-Plugin
 Allows the site admin to "subscribe" any number of email addresses to receive emails when articles in selected categories are
-published or modified.
+published or modified. And as of version 5.3, you can also use the Joomla! Task Scheduler to send your emails as well, provided
+you have the Community Builder Auto Actions plugin or you know how to create a Task yourself.
 
 ## Admininstrator Configuration
 You can create up to 1000 subscription groups. Each subscription group associates one or more article categories with one or
@@ -27,8 +28,10 @@ This is what made me seek-out an external email list system that I could integra
 its own web interface, behind that is a Perl-powered system with batch scheduling and subscriptions that can be stored in a MySQL
 database. The database became the medium of exchange between the Joomla site and Dada Mail, and I just had to write a plugin to provide
 the "glue," a common thread with these two plugins. The Dada Mail Subscriptions Plugin was originally written for Community Builder (CB)
-because there were no custom profile fields in Joomla yet, nor did Joomla have the extensive and refined event system CB had.
+because there were no custom profile fields in Joomla yet, nor did Joomla have the extensive and refined event system CB had. Since
+then, I have switched my sites over to using the Mailster Joomla! component, which completely integrates the email list system with
+the site and can be run using an external cronjob.
 
-The Dada Mail Subscriptions Plugin allows users to subscribe to individual Dada Mail lists, the email addresses for which you can
-subscribe to Content Notifier subscription groups. All this "glue" is transparent to the site users, but together the two plugins
+Both the Dada Mail and Mailster Subscriptions Plugins allow users to subscribe to individual mailing lists by using the list addresses 
+to subscribe to Content Notifier subscription groups. All this "glue" is transparent to the site users, but together the two plugins
 create a pretty powerful newsletter system.
