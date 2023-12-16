@@ -41,14 +41,13 @@
             description="&lt;p&gt;Flip these switches to control this group.&lt;/p&gt;" 
         />
         <field name="enabled" type="radio"
-            label="Group Enabled In:"
-            description="Select whether to send email on front or back end article modifications, both, or neither (disabled)."
+            label="Group Enabled:"
+            description="Select whether to send email on article save, scheduled task, or neither (disabled)."
             class="btn-group btn-group"
             default="Neither">
-            <option value="Front">Front</option>
-            <option value="Back">Back</option>
-            <option value="Both">Both</option>
-            <option value="Neither">Neither</option>
+            <option value="Save">Save</option>
+            <option value="Task">Task</option>
+            <option value="Neither">Disabled</option>
         </field>
         <field name="format" type="radio"
             label="Email Format:"

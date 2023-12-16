@@ -1,112 +1,46 @@
 <?php
-/**
- * @package     Joomla.Plugin
- * @subpackage  Content.Notifier
- * @version     5.2
- * @copyright   Copyright (C) 2018-2022 Bruce Scherzinger. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
- */
-
-defined('_JEXEC') or die;
-
-use Joomla\CMS\Factory;
-use Joomla\CMS\Plugin\CMSPlugin;
-use Joomla\CMS\Router\Route;
-use Joomla\Event\Event;
-use Joomla\Event\SubscriberInterface;
-
-/**
- * Notifier Content Plugin
- *
- * @since  3.9
- */
-
-if(!class_exists('ContentHelperRoute')) require_once (JPATH_SITE.'/components/com_content/helpers/route.php');
-
-class PlgContentNotifier extends CMSPlugin
-{
-    /**
-     * Load the language file on instantiation. Note this is only available in Joomla 3.1 and higher.
-     * If you want to support 3.0 series you must override the constructor
-     *
-     * @var    boolean
-     * @since  3.9
-     */
-    protected $autoloadLanguage = true;
 
     /**
-     * Email notification after save content method.
-     * Content is passed by reference, but after the save, so no changes will be saved.
-     * Method is called right after the content is saved.
+     * Email notification of selected article(s) using the "task" method.
+     *  Selection is made based on the query coded at the end of this file.
+     *  Method is called by the Joomla Task Scheduler triggering a CB Auto Action.
+     *  This is a companion script to Content Notifier meant to be included in an
+     *  unconstrained CB Auto Action Task that uses no other trigger. This code
+     *  will only send the article if "Task" is selected as the trigger in the
+     *  Content Notifier plugin for a given subscription group.
      *
-     * @param   string  $context  The context of the content passed to the plugin (added in 1.6)
+     * @author  Bruce Scherzinger
+     *
+     * @license GNU v2 Public License
+     *
      * @param   object  $article  A JTableContent object
-     * @param   bool    $isNew    If the content has just been created
      *
      * @return  void
      *
      * @since   3.9
      */
-    public function onContentAfterSave($context,&$article,$isNew)
+    function emailArticle($article)
     {
-        $debug = false;
-
         // If there is a send-mode custom field, get it and some other info
-        $emailmode = $this->emailMode($article);
-        $emailed = 'Email was NOT sent';
+        $emailmode = emailMode($article);
 
         // Get the current date/time
         $currdatetime = date('Y-m-d');
 
-        if ($debug)
-        {
-            $db = Factory::getDBO();
-            $summary = "EMAIL mode is $emailmode->Value. Publish-up is $article->publish_up. Now is $currdatetime.";
-        }
-
-        // This handler only sends a notification for a published article that was just saved.
+        // This handler sends a notification for a published article that is preconditioned to email.
         // Note that the article must not just be published but its publish date must have passed.
         if ($article->state == 1 && $currdatetime >= $article->publish_up)
         {
-            $action = 'published';
-
             // If there is no send-mode field or the user did not specify 'Do NOT Send', we can proceed.            
             if (!$emailmode || $emailmode->Value != 'Do NOT Send')
             {
-                // Point to plug-in parameters
-                $params = $this->params;
-    
-                // Determine the appropriate action
-                if ($isNew)
-                    $action = $params->get('newaction');
-                else
-                    $action = $params->get('saveaction');
-    
-                if ($action)
-                    $action = JText::_($action);
-                else
-                    $action = JText::_('COM_CONTENT_SAVE_SUCCESS');
-    
+                // Reset the parameter to the default value if requested.
+                if ($emailmode) resetMode($emailmode);
+
                 // Send the notification email, if applicable
-                if ($this->filterNotification($article,$action))
-                {
-                    // Reset the parameter to the default value if requested.
-                    $this->resetMode($emailmode);
-                    $emailed = 'Email was sent.';
-                }
+                filterNotification($article);
             }
         }
-        else
-        {
-            $action = 'did NOT publish';
-        }
-
-        if ($debug)
-        {
-            $db->setQuery("INSERT INTO a_debug_log (message) VALUES ('PlgContentNotifier $action \"".addslashes($article->title)."\"". $emailed. $summary."\")");
-            $db->execute();
-        }
-        return true;
     }
 
     /**
@@ -116,16 +50,19 @@ class PlgContentNotifier extends CMSPlugin
      *
      * @since   3.9
      */
-    protected function emailMode($article)
+    function emailMode($article)
     {
-        // Get the custom field value (because $article->jcFields doesn't do it)
-        $db = Factory::getDBO();
+        // Get the custom field value (because $article->jcFields does not do it)
+        $db = JFactory::getDBO();
 
         // Get the value of the send-mode field.
         $query = "SELECT v.value as Value, f.id as Field, f.default_value as Reset, c.id as Item
-                 FROM #__fields f LEFT JOIN #__fields_values v ON f.id=v.field_id
-                 LEFT JOIN #__content c ON c.id=v.item_id 
-                 WHERE c.id=$article->id AND f.name='send-mode'";
+                  FROM #__fields f 
+                  LEFT JOIN #__fields_values v
+                  ON f.id=v.field_id
+                  LEFT JOIN #__content c
+                  ON c.id=v.item_id 
+                  WHERE c.id=".$article->id." AND f.name='send-mode'";
         $db->setQuery($query);
 
         // Return the necessary info
@@ -139,13 +76,13 @@ class PlgContentNotifier extends CMSPlugin
      *
      * @since   3.9
      */
-    protected function resetMode($fieldinfo)
+    function resetMode($fieldinfo)
     {
         // If 'Send Once' was specified, reset the parameter to the default value.
         if ($fieldinfo->Value == 'Send Once')
         {
             // Get a database object
-            $db = Factory::getDBO();
+            $db = JFactory::getDBO();
 
             // Fields to update.
             $fields = $db->quoteName('value') . ' = ' . $db->quote($fieldinfo->Reset);
@@ -163,24 +100,28 @@ class PlgContentNotifier extends CMSPlugin
     }
 
     /**
-     * Apply subscription group filtering for all groups in use.
+     * Apply Content Notifier plugin subscription group filtering for all groups in use.
      *
      * @param   object   $article  The content object passed to the plugin.
-     * @param   string   $action   A string describing what just happened to the article.
      *
      * @return  void
      *
      * @since   3.9
      */
-    protected function filterNotification($article,$action)
+    function filterNotification($article)
     {
         $sentnotification = false;
 
-        // Point to plug-in parameters
-        $params = $this->params;
+        // Get the parameters for the Content Notifier plugin
+        $db = JFactory::getDBO();
+        $db->setQuery("SELECT params FROM #__extensions WHERE folder='content' AND element='notifier'");
+        
+        
+        // Get the plug-in parameters
+        $params = json_decode($db->loadResult(),false,20);
 
         // Get the parameters for all defined groups.
-        $subgroups = $params->get('subgroups');
+        $subgroups = $params->subgroups;
 
         // Process each group individually.
         foreach ($subgroups as $thisgroup)
@@ -188,13 +129,13 @@ class PlgContentNotifier extends CMSPlugin
             // Get list of categories for notification
             $categories = $thisgroup->category;
 
-            // First, determine if we even want to send this based on the article being saved.
-            if ($thisgroup->enabled == "Save")
+            // First, determine if we even want to send this based on whether it is task activated.
+            if ($thisgroup->enabled == "Task")
             {
                 // If the category of this article is in the list for notification, then do it.
                 if (in_array($article->catid,$categories))
                 {
-                    $this->sendNotification($thisgroup,$article,$action);
+                    sendNotification($thisgroup,$article);
                     $sentnotification = true;
                 }
             }
@@ -207,25 +148,21 @@ class PlgContentNotifier extends CMSPlugin
      *
      * @param   object   $group    Subscription group object.
      * @param   object   $article  The content object passed to the plugin.
-     * @param   string   $action   A string describing what just happened to the article.
      *
      * @return  void
      *
      * @since   3.9
      */
-    protected function sendNotification($group,$article,$action)
+    function sendNotification($group,$article)
     {
         // Get the application framework
-        $mainframe = Factory::getApplication();
+        $mainframe = JFactory::getApplication();
 
         // Setup a mailer
-        $mailer = Factory::getMailer();
-
-        // Point to plug-in parameters
-        $params = $this->params;
+        $mailer = JFactory::getMailer();
 
         // Get a database object
-        $db = Factory::getDBO();
+        $db = JFactory::getDBO();
 
         // See if we need to send this to the article author, the group address, or both.
         // If both, make the author the primary.
@@ -268,8 +205,10 @@ class PlgContentNotifier extends CMSPlugin
         if ($recipient != "")
         {
             // Get system email address
-            $from_name = $params->get('from_name',$mainframe->getCfg('fromname'));
-            $from_addr = $params->get('from_addr',$mainframe->getCfg('mailfrom'));
+            $from_name = $params->from_name;
+            if (!$from_name) $from_name = $mainframe->getCfg('fromname');
+            $from_addr = $params->from_addr;
+            if (!$from_addr) $from_addr = $mainframe->getCfg('mailfrom');
     
             // Get article category name
             $db->setQuery("SELECT * FROM #__categories WHERE id=$article->catid");
@@ -314,10 +253,11 @@ class PlgContentNotifier extends CMSPlugin
                       '[FULLTEXT]',
                       '[ALIAS]',
                       '[MODIFIED]',
-                      '[CREATED]'),
+                      '[CREATED]',
+                      '[AREA]'),
                 array($mainframe->getCfg('sitename'),
                       addslashes($category->title),
-                      $action,
+                      "Article Sent",
                       addslashes($article->title),
                       $created_by->name,
                       $created_by->firstname,
@@ -327,7 +267,8 @@ class PlgContentNotifier extends CMSPlugin
                       addslashes($article->fulltext),
                       $article->alias,
                       $article->modified,
-                      $article->created
+                      $article->created,
+                      'Task'
                       ),
                 $message),
                 ENT_QUOTES);
@@ -336,7 +277,7 @@ class PlgContentNotifier extends CMSPlugin
             $subject = ($group->email_subject != '' ? $group->email_subject : '[SITE] [CATEGORY] [TITLE] [ACTION]');
             $subject = html_entity_decode(str_replace(
                         array('[SITE]','[CATEGORY]','[TITLE]','[ACTION]'),
-                        array($mainframe->getCfg('sitename'),$category->title,$article->title,$action),$subject),
+                        array($mainframe->getCfg('sitename'),$category->title,$article->title,"Article Sent"),$subject),
                        ENT_QUOTES);
     
             // Build e-mail message
@@ -351,4 +292,24 @@ class PlgContentNotifier extends CMSPlugin
             $mailer->Send();
         }
     }
-}
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    // PROGRAM EXECUTION STARTS HERE
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    // Get the newest published article whose title includes the word "Issue" and whose publish date is in the past.
+    $db = JFactory::getDBO();
+    $db->setQuery("SELECT * 
+                   FROM `#__content`
+                   WHERE title LIKE '%issue%'
+                   AND state=1
+                   AND publish_up <= NOW()
+                   ORDER BY publish_up DESC LIMIT 1");
+    $article = $db->loadObject();
+
+    if ($article) // if there isn't one (yet), don't do anything.
+    {
+        // Send the email
+        emailArticle($article);
+    }
+
+?>
