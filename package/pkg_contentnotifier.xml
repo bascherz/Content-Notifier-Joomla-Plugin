@@ -4,7 +4,7 @@
 <author>Hello World Package Team</author>
 <creationDate>Dec 2023</creationDate>
 <packagename>contentnotifier</packagename>
-<version>5.3</version>
+<version>5.4</version>
 <packager>Bruce Scherzinger</packager>
 <description>Package containing the Content Notifier Plugin and its companion scheduler Task</description>
 <files folder="packages">
