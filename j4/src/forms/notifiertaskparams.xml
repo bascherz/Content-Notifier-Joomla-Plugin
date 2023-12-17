@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<form>
+	<fields name="params">
+		<fieldset name="task_params">
+			<field name="query" type="textarea" label="PLG_TASK_NOTIFIERTASK_QUERY_LABEL" rows="5" cols="100" description="PLG_TASK_NOTIFIERTASK_QUERY_DESC" default="WHERE title LIKE '%issue%' AND state=1 AND NOT publish_up &lt;= NOW()) ORDER BY publish_up DESC" filter="raw" />
+		</fieldset>
+	</fields>
+</form>
