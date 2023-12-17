@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <extension type="package" version="4.0.0" method="upgrade">
 <name>Content Notifier Package</name>
-<author>Hello World Package Team</author>
+<author>Bruce Scherzinger</author>
 <creationDate>Dec 2023</creationDate>
 <packagename>contentnotifier</packagename>
 <version>5.4</version>
