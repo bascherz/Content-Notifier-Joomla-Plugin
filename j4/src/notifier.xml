@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="5.3" type="plugin" group="content" method="upgrade">
+<extension type="plugin" group="content" method="upgrade">
     <name>Content - Notifier</name>
     <author>Bruce Scherzinger</author>
     <creationDate>December 2023</creationDate>
-    <copyright>Copyright (C) 2020-2022 Bruce Scherzinger. All rights reserved.</copyright>
-    <license>GNU General Public License version 3 or later; see LICENSE.txt</license>
-    <authorEmail>joomlander@scherzinger.org</authorEmail>
-    <authorUrl>scherzinger.org</authorUrl>
-    <version>5.3</version>
-    <description>Content Notifier Plugin v5.3. Sends email notifications to designated email address(es) when articles are added to or modified in selected categories. ....................................................................................................... 
+	<copyright>(C) 2004-2023 Bruce Scherzinger, all rights reserved</copyright>
+	<license>https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL version 3</license>
+	<authorEmail>bruce@scherzinger.org</authorEmail>
+	<authorUrl>https://scherzinger.org/</authorUrl>
+    <version>5.4</version>
+    <description>Content Notifier Plugin v5.4. Sends email notifications to designated email address(es) when articles are added to or modified in selected categories. ....................................................................................................... 
     <![CDATA[
             <h3>Content Notifier Plug-In v5.3</h3>
             <address>&copy; 2023 Bruce Scherzinger</address>
@@ -68,6 +68,9 @@
             <p>One notification will be sent to each group subscribed to the category for each article that is saved or if the subscription group is triggered off a Scheduled Task (see notifiertask.php).</p>
             <hr>
             <h4>Custom Fields:</h4>
+            <p>Although you do not need to define any custom fields, if you do things will be much easier to control. Without the following
+            custom field, your article will be emailed (provided you have the associated subscription group enabled) every time it is saved
+            as published. By adding the following custom field, you can control when the email gets sent.</p>
             <h5>Name: 'send-mode'</h5>
             <p>This field needs 3 values. Note these are the <b>VALUES</b> for selection; the titles can be anything.<br>
             The field can be defined in any field group you wish, but one named 'EMAIL' is recommended.<br>
@@ -83,7 +86,6 @@
     </description>
     <files>
         <filename plugin="notifier">notifier.php</filename>
-        <filename plugin="notifier">notifiertask.php</filename>
         <filename plugin="notifier">notifiergroup.xml</filename>
     </files>
     <languages>

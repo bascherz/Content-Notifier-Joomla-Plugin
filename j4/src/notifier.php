@@ -2,9 +2,9 @@
 /**
  * @package     Joomla.Plugin
  * @subpackage  Content.Notifier
- * @version     5.2
+ * @version     5.4
  * @copyright   Copyright (C) 2018-2022 Bruce Scherzinger. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @license     GNU General Public License version 3
  */
 
 defined('_JEXEC') or die;
