@@ -8,18 +8,19 @@
 <packager>Bruce Scherzinger</packager>
 <description>Package containing the Content Notifier Plugin and its companion scheduler Task</description>
 <files folder="packages">
-    <file type="plugin" group="content" id="notifier">plg_contentnotifier_5.3.zip</file>
-    <file type="plugin" group="task" id="notifiertask">plg_contentnotifiertask_5.3.zip</file>
+    <file type="plugin" group="content" id="notifier">plg_contentnotifier_5.4.zip</file>
+    <file type="plugin" group="task" id="notifiertask">plg_contentnotifiertask_5.4.zip</file>
 </files>
+<scriptfile>pkg_contentnotifier.php</scriptfile>
 <updates>
-	<update>
-		<name>Content Notifier Plugin Package</name>
-		<description>Joomla! Content Notifier and Task Plugins</description>
-		<infourl title="Content Notifier Plugin">https://github.com/bascherz/Content-Notifier-Joomla-Plugin/releases/tag/5.4</infourl>
-		<downloads>
-			<downloadurl type="full" format="zip">https://github.com/bascherz/Content-Notifier-Joomla-Plugin/releases/download/5.4/pkg_contentnotifier_5.4.zip</downloadurl>
-		</downloads>
-		<targetplatform name="joomla" version="4.[0123456789]" />
-	</update>
+    <update>
+        <name>Content Notifier Plugin Package</name>
+        <description>Joomla! Content Notifier and Task Plugins</description>
+        <infourl title="Content Notifier Plugin">https://github.com/bascherz/Content-Notifier-Joomla-Plugin/releases/tag/5.4</infourl>
+        <downloads>
+            <downloadurl type="full" format="zip">https://github.com/bascherz/Content-Notifier-Joomla-Plugin/releases/download/5.4/pkg_contentnotifier_5.4.zip</downloadurl>
+        </downloads>
+        <targetplatform name="joomla" version="4.[0123456789]" />
+    </update>
 </updates>
 </extension>
