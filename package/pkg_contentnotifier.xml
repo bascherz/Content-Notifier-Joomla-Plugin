@@ -8,8 +8,8 @@
 <packager>Bruce Scherzinger</packager>
 <description>Package containing the Content Notifier Plugin and its companion scheduler Task</description>
 <files folder="packages">
-    <file type="plugin" id="contentnotifier">plg_contentnotifier_5.3.zip</file>
-    <file type="plugin" id="contentnotifiertask">plg_contentnotifiertask_5.3.zip</file>
+    <file type="plugin" group="content" id="notifier">plg_contentnotifier_5.3.zip</file>
+    <file type="plugin" group="task" id="notifiertask">plg_contentnotifiertask_5.3.zip</file>
 </files>
 <updates>
 	<update>
