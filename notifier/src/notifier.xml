@@ -140,6 +140,6 @@
         </fields>
     </config>
     <updateservers>
-        <server type="extension" name="Content Notifier Joomla Plugin Update Site">https://raw.githubusercontent.com/bascherz/Content-Notifier-Joomla-Plugin/master/j4/plg_contentnotifier.xml</server>
+        <server type="extension" name="Content Notifier Joomla Plugin Update Site">https://raw.githubusercontent.com/bascherz/Content-Notifier-Joomla-Plugin/master/notifier/plg_contentnotifier.xml</server>
     </updateservers>
 </extension>
