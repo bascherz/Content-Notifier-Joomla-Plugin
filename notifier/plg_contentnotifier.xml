@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
     <update>
-        <name>Content Notifier Task Plugin</name>
-        <description>Joomla! Content Notifier Task Plugin</description>
-        <element>notifiertask</element>
-        <folder>task</folder>
+        <name>Content Notifier Plugin</name>
+        <description>Joomla! Content Notifier Plugin</description>
+        <element>notifier</element>
+        <folder>content</folder>
         <type>plugin</type>
         <version>5.5</version>
         <client>site</client>
         <infourl title="Content Notifier Plugin">https://github.com/bascherz/Content-Notifier-Joomla-Plugin/releases/tag/5.5</infourl>
         <downloads>
-            <downloadurl type="full" format="zip">https://github.com/bascherz/Content-Notifier-Joomla-Plugin/releases/download/5.5/plg_contentnotifiertask_5.5.zip</downloadurl>
+            <downloadurl type="full" format="zip">https://github.com/bascherz/Content-Notifier-Joomla-Plugin/releases/download/5.5/plg_contentnotifier_5.5.zip</downloadurl>
         </downloads>
         <targetplatform name="joomla" version="4.[0123456789]" />
     </update>

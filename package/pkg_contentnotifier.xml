@@ -2,23 +2,23 @@
 <extension type="package" version="4.0.0" method="upgrade">
 <name>Content Notifier Package</name>
 <author>Bruce Scherzinger</author>
-<creationDate>Dec 2023</creationDate>
+<creationDate>September 2024</creationDate>
 <packagename>contentnotifier</packagename>
-<version>5.4</version>
+<version>5.5</version>
 <packager>Bruce Scherzinger</packager>
 <description>Package containing the Content Notifier Plugin and its companion scheduler Task</description>
 <files folder="packages">
-    <file type="plugin" group="content" id="notifier">plg_contentnotifier_5.4.zip</file>
-    <file type="plugin" group="task" id="notifiertask">plg_contentnotifiertask_5.4.zip</file>
+    <file type="plugin" group="content" id="notifier">plg_contentnotifier_5.5.zip</file>
+    <file type="plugin" group="task" id="notifiertask">plg_contentnotifiertask_5.5.zip</file>
 </files>
 <scriptfile>pkg_contentnotifier.php</scriptfile>
 <updates>
     <update>
         <name>Content Notifier Plugin Package</name>
         <description>Joomla! Content Notifier and Task Plugins</description>
-        <infourl title="Content Notifier Plugin">https://github.com/bascherz/Content-Notifier-Joomla-Plugin/releases/tag/5.4</infourl>
+        <infourl title="Content Notifier Plugin">https://github.com/bascherz/Content-Notifier-Joomla-Plugin/releases/tag/5.5</infourl>
         <downloads>
-            <downloadurl type="full" format="zip">https://github.com/bascherz/Content-Notifier-Joomla-Plugin/releases/download/5.4/pkg_contentnotifier_5.4.zip</downloadurl>
+            <downloadurl type="full" format="zip">https://github.com/bascherz/Content-Notifier-Joomla-Plugin/releases/download/5.5/pkg_contentnotifier_5.5.zip</downloadurl>
         </downloads>
         <targetplatform name="joomla" version="4.[0123456789]" />
     </update>

@@ -2,8 +2,8 @@
 /**
  * @package     Joomla.Plugin
  * @subpackage  Content Notifier Task
- * @version     5.4
- * @copyright   Copyright (C) 2018-2022 Bruce Scherzinger. All rights reserved.
+ * @version     5.5
+ * @copyright   Copyright (C) 2018-2024 Bruce Scherzinger. All rights reserved.
  * @license     GNU General Public License version 3
  */
 
@@ -67,11 +67,12 @@ class PlgTaskNotifierTask extends CMSPlugin implements SubscriberInterface
             $emailmode = emailMode($article);
 
             // Get the current date/time
-            $currdatetime = date('Y-m-d');
+            $currdate = date('Y-m-d H-i-s');
+            $publishdate = substr($article->publish_up,0,10);
 
             // This handler sends a notification for a published article that is preconditioned to email.
             // Note that the article must not just be published but its publish date must have passed.
-            if ($article->state == 1 && $currdatetime >= $article->publish_up)
+            if ($article->state == 1 && $currdate >= $publishdate)
             {
                 // If there is no send-mode field or the user did not specify 'Do NOT Send', we can proceed.            
                 if (!$emailmode || $emailmode->Value != 'Do NOT Send')
@@ -298,15 +299,15 @@ class PlgTaskNotifierTask extends CMSPlugin implements SubscriberInterface
                           '[CREATED]',
                           '[AREA]'),
                     array($mainframe->getCfg('sitename'),
-                          addslashes($category->title),
+                          $category->title,
                           'Article Sent',
-                          addslashes($article->title),
+                          $article->title,
                           $created_by->name,
                           $created_by->firstname,
                           $abs_link,
                           $rel_link,
-                          addslashes($article->introtext),
-                          addslashes($article->fulltext),
+                          $article->introtext,
+                          $article->fulltext,
                           $article->alias,
                           $article->modified,
                           $article->created,

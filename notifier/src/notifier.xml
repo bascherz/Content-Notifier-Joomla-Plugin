@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="content" method="upgrade">
+    <name>Content - Notifier</name>
+    <author>Bruce Scherzinger</author>
+    <creationDate>September 2024</creationDate>
+	<copyright>(C) 2004-2024 Bruce Scherzinger, all rights reserved</copyright>
+	<license>https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL version 3</license>
+	<authorEmail>bruce@scherzinger.org</authorEmail>
+	<authorUrl>https://scherzinger.org/</authorUrl>
+    <version>5.5</version>
+    <description>Content Notifier Plugin v5.5. Sends email notifications to designated email address(es) when articles are added to or modified in selected categories. ....................................................................................................... 
+    <![CDATA[
+            <h3>Content Notifier Plug-In v5.5</h3>
+            <address>&copy; 2023 Bruce Scherzinger</address>
+            <p>This plugin allows the site admin to subscribe/unsubscribe one or more email addresses to be
+            notified when an article in selected categories is created or modified.</p>
+            <p>Additionally, if the Community Builder Auto Actions plugin is installed (requires Community Builder)
+            then the admin can create a plain (no trigger) Auto Action and trigger it via the Joomla Task Scheduler
+            with the "Execute Auto Actions" task type. The admin will need to modify the file notifiertask.php (at
+            the bottom of the file) to select the article(s) from the #__content table to be emailed.</p>
+            <h4>Special Content Tags</h4>
+            <p>Special tags you can insert into email notice message fragments are as follows:</p>
+            <table border=1 cellspacing=0 cellpadding=1>
+            <tr>
+                <th>Tag</th><th>What is Inserted</th><th>In Message Parts</th>
+            </tr>
+            <tr>
+                <td>[SITE]</td><td>Name of the website.</td><td>Subject,Body</td>
+            </tr>
+            <tr>
+                <td>[CATEGORY]</td><td>Category containing the article.</td><td>Subject,Body</td>
+            </tr>
+            <tr>
+                <td>[ACTION]</td><td>Phrase indicating what just happened to the article. See Plugin Settings</td><td>Subject,Body</td>
+            </tr>
+            <tr>
+                <td>[TITLE]</td><td>Article title.</td><td>Subject,Body</td>
+            </tr>
+            <tr>
+                <td>[AUTHOR]</td><td>Article author's full name.</td><td>Body</td>
+            </tr>
+            <tr>
+                <td>[FIRST]</td><td>Article author's first name.</td><td>Body</td>
+            </tr>
+            <tr>
+                <td>[INTROTEXT]</td><td>Article intro text.</td><td>Body (HTML only)</td>
+            </tr>
+            <tr>
+                <td>[FULLTEXT]</td><td>Article full text.</td><td>Body (HTML only)</td>
+            </tr>
+            <tr>
+                <td>[LINK]</td><td>Full link of the article. Use if you have your site editor configured to use relative links or you are just inserting the placeholder into the article directly.</td><td>Body</td>
+            </tr>
+            <tr>
+                <td>[LINKREL]</td><td>Relative link of the article. Use if you  have your site editor configured to use absolute links.</td><td>Body</td>
+            </tr>
+            <tr>
+                <td>[ALIAS]</td><td>Article alias.</td><td>Body</td>
+            </tr>
+            <tr>
+                <td>[CREATED]</td><td>Article creation date.</td><td>Body</td>
+            </tr>
+            <tr>
+                <td>[MODIFIED]</td><td>Article modified date.</td><td>Body</td>
+            </tr>
+            </table>
+            <br/>
+            <p>One notification will be sent to each group subscribed to the category for each article that is saved or if the subscription group is triggered off a Scheduled Task (see notifiertask.php).</p>
+            <hr>
+            <h4>Custom Fields:</h4>
+            <p>Although you do not need to define any custom fields, if you do things will be much easier to control. Without the following
+            custom field, your article will be emailed (provided you have the associated subscription group enabled) every time it is saved
+            as published. By adding the following custom field, you can control when the email gets sent.</p>
+            <h5>Name: 'send-mode'</h5>
+            <p>This field needs 3 values. Note these are the <b>VALUES</b> for selection; the titles can be anything.<br>
+            The field can be defined in any field group you wish, but one named 'EMAIL' is recommended.<br>
+            As usual, you must include the field in the article categories for which you want this control.</p>
+            <ol>
+            <li><b>Do NOT Send</b> - Select this option if you don't want a notification emailed when this article changes. This must also be the default value.</li>
+            <li><b>Send</b> - Select this option if you want a notification every time the published article is saved.</li>
+            <li><b>Send Once</b> - Select this option if you want a notification sent just this once. It automatically reverst to Do NOT Send after being sent.</li>
+            </ol>
+            <p>Viable field types: radio, single-selection list</p>
+            <hr>
+    ]]>
+    </description>
+    <files>
+        <filename plugin="notifier">notifier.php</filename>
+        <filename plugin="notifier">notifiergroup.xml</filename>
+    </files>
+    <languages>
+    </languages>
+    <config>
+        <fields name="params">
+            <fieldset name="setup" label="Settings">
+                <field name="emailsettings" type="note"
+                    label="From Email Settings"
+                    description="These settings are optional. Leaving them empty will cause the site defaults to be used." 
+                />
+                <field name="from_addr" type="email"
+                    label="From Address:"
+                    description="Email FROM address for sending all notifications."
+                    class="inputbox"
+                    validate="email"
+                />
+                <field name="from_name" type="text"
+                    label="From Name:"
+                    description="Email FROM name for sending all notifications."
+                />
+                <field name="actionsettings" type="note"
+                    label="Action Settings"
+                    description="You can use either a language override or existing constant, or you can just enter your phrases here to define what you want the [ACTION] tag to contain in these cases. If you leave either box empty, the default is COM_CONTENT_SAVE_SUCCESS."
+                />
+                <field name="newaction" type="text"
+                    label="New Article:"
+                    description="Language constant to use when an article is just created."
+                />
+                <field name="saveaction" type="text"
+                    label="Updated Article:"
+                    description="Language constant to use when an article is just updated."
+                />
+            </fieldset>
+            <fieldset name="groups" label="Subscription Groups">
+                <field name="subgroupheading" type="note"
+                    label="Subscription Groups"
+                    description="Each subscription group has a set of fields. The fields in each row are specific to that group." 
+                />
+                <field name="subgroups" type="subform"
+                    label="Click + to add groups &#8594;"
+                    description="Clicking the button to the right adds a new group to the end. Clicking the + in the lower right
+                    corner of a group box adds a group after that one. Ordering could be relevant, but it is generally not. So using
+                    the group drag handles is probably not useful other than to put the group you use most first."
+                    formsource="/plugins/content/notifier/notifiergroup.xml"
+                    multiple="true"
+                    min="1"
+                    groupByFieldset="true"
+                    layout="joomla.form.field.subform.repeatable-table"
+                />
+            </fieldset>
+        </fields>
+    </config>
+    <updateservers>
+        <server type="extension" name="Content Notifier Joomla Plugin Update Site">https://raw.githubusercontent.com/bascherz/Content-Notifier-Joomla-Plugin/master/j4/plg_contentnotifier.xml</server>
+    </updateservers>
+</extension>
