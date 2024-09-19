@@ -55,8 +55,9 @@ class PlgContentNotifier extends CMSPlugin
         $emailmode = $this->emailMode($article);
         $emailed = 'Email was NOT sent';
 
-        // Get the current date/time
+        // Get the current date/time. Get the publish_up time also, but use only the date.
         $currdatetime = date('Y-m-d H-i-s');
+        $publishdate = substr($article->publish_up,0,10);
 
         if ($debug)
         {
@@ -66,7 +67,7 @@ class PlgContentNotifier extends CMSPlugin
 
         // This handler only sends a notification for a published article that was just saved.
         // Note that the article must not just be published but its publish date must have passed.
-        if ($article->state == 1 && $currdatetime >= $article->publish_up)
+        if ($article->state == 1 && $currdatetime >= $publishdate)
         {
             $action = 'published';
 
