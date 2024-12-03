@@ -38,7 +38,7 @@
         <field name="controlspacer" type="spacer" hr="true" />
         <field name="controloptions" type="note"
             label="Control Options"
-            description="&lt;p&gt;Flip these switches to control this group.&lt;/p&gt;" 
+            description="Flip these switches to control this group." 
         />
         <field name="enabled" type="radio"
             label="Group Enabled:"
@@ -56,14 +56,6 @@
             default="0">
             <option value="HTML">HTML</option>
             <option value="Text">Text</option>
-        </field>
-        <field name="prepare_content" type="radio"
-            label="Prepare Content:"
-            description="Optionally prepare the content with the Joomla content plugins. Only works with HTML format."
-            class="btn-group btn-group-yesno"
-            default="0">
-            <option value="1">JYES</option>
-            <option value="0">JNO</option>
         </field>
     </fieldset>
     <fieldset name="templates" label="Templates">

@@ -2,7 +2,7 @@
 /**
  * @package     Joomla.Plugin
  * @subpackage  Content.Notifier
- * @version     5.4
+ * @version     5.6
  * @copyright   Copyright (C) 2018-2024 Bruce Scherzinger. All rights reserved.
  * @license     GNU General Public License version 3
  */
@@ -49,8 +49,6 @@ class PlgContentNotifier extends CMSPlugin
      */
     public function onContentAfterSave($context,&$article,$isNew)
     {
-        $debug = false;
-
         // If there is a send-mode custom field, get it and some other info
         $emailmode = $this->emailMode($article);
         $emailed = 'Email was NOT sent';
@@ -59,12 +57,6 @@ class PlgContentNotifier extends CMSPlugin
         $currdatetime = date('Y-m-d H-i-s');
         $publishdate = substr($article->publish_up,0,10);
 
-        if ($debug)
-        {
-            $db = Factory::getDBO();
-            $summary = "EMAIL mode is $emailmode->Value. Publish-up is $article->publish_up. Now is $currdatetime.";
-        }
-
         // This handler only sends a notification for a published article that was just saved.
         // Note that the article must not just be published but its publish date must have passed.
         if ($article->state == 1 && $currdatetime >= $publishdate)
@@ -72,7 +64,7 @@ class PlgContentNotifier extends CMSPlugin
             $action = 'published';
 
             // If there is no send-mode field or the user did not specify 'Do NOT Send', we can proceed.            
-            if (!$emailmode || $emailmode->Value != 'Do NOT Send')
+            if (!$emailmode || $emailmode->Value != 'Never')
             {
                 // Point to plug-in parameters
                 $params = $this->params;
@@ -126,7 +118,7 @@ class PlgContentNotifier extends CMSPlugin
         $query = "SELECT v.value as Value, f.id as Field, f.default_value as Reset, c.id as Item
                  FROM #__fields f LEFT JOIN #__fields_values v ON f.id=v.field_id
                  LEFT JOIN #__content c ON c.id=v.item_id 
-                 WHERE c.id=$article->id AND f.name='send-mode'";
+                 WHERE c.id=$article->id AND f.name LIKE '%send-mode'";
         $db->setQuery($query);
 
         // Return the necessary info
@@ -143,13 +135,13 @@ class PlgContentNotifier extends CMSPlugin
     protected function resetMode($fieldinfo)
     {
         // If 'Send Once' was specified, reset the parameter to the default value.
-        if ($fieldinfo->Value == 'Send Once')
+        if ($fieldinfo->Value == 'Once')
         {
             // Get a database object
             $db = Factory::getDBO();
 
             // Fields to update.
-            $fields = $db->quoteName('value') . ' = ' . $db->quote($fieldinfo->Reset);
+            $fields = $db->quoteName('value') . " = 'Never'";
             
             // Conditions for which records should be updated.
             $conditions = array($db->quoteName('field_id') . ' = ' . $fieldinfo->Field,
@@ -241,7 +233,7 @@ class PlgContentNotifier extends CMSPlugin
         if ($group->recipients == "Address" || $group->recipients == "Both")
         {
             // Add the admin address as a recipient. Allow admin address field to contain multiple addresses.
-            $address = ($group->address == "") ? $mainframe->getCfg('mailfrom') : $group->address;
+            $address = ($group->address == "") ? $mainframe->get('mailfrom') : $group->address;
             $address = str_replace(" ","",$address);  // strip all spaces
         }
         if ($group->recipients == "Author" || $group->recipients == "Both")
@@ -269,8 +261,8 @@ class PlgContentNotifier extends CMSPlugin
         if ($recipient != "")
         {
             // Get system email address
-            $from_name = $params->get('from_name',$mainframe->getCfg('fromname'));
-            $from_addr = $params->get('from_addr',$mainframe->getCfg('mailfrom'));
+            $from_name = $params->get('from_name',$mainframe->get('fromname'));
+            $from_addr = $params->get('from_addr',$mainframe->get('mailfrom'));
     
             // Get article category name
             $db->setQuery("SELECT * FROM #__categories WHERE id=$article->catid");
@@ -290,10 +282,6 @@ class PlgContentNotifier extends CMSPlugin
                 $message = ($group->htmltemplate == "") ?
                     '<p>[CATEGORY] article [TITLE] has been [ACTION].</p><p>'.$abs_link.'</p>' :
                     $group->htmltemplate;
-                if ($group->prepare_content == "1")
-                {
-                    $message  = JHtml::_('content.prepare', $message);
-                }
             }
             else
             {
@@ -316,7 +304,7 @@ class PlgContentNotifier extends CMSPlugin
                       '[ALIAS]',
                       '[MODIFIED]',
                       '[CREATED]'),
-                array($mainframe->getCfg('sitename'),
+                array($mainframe->get('sitename'),
                       $category->title,
                       $action,
                       $article->title,
@@ -337,7 +325,7 @@ class PlgContentNotifier extends CMSPlugin
             $subject = ($group->email_subject != '' ? $group->email_subject : '[SITE] [CATEGORY] [TITLE] [ACTION]');
             $subject = html_entity_decode(str_replace(
                         array('[SITE]','[CATEGORY]','[TITLE]','[ACTION]'),
-                        array($mainframe->getCfg('sitename'),$category->title,$article->title,$action),$subject),
+                        array($mainframe->get('sitename'),$category->title,$article->title,$action),$subject),
                        ENT_QUOTES);
     
             // Build e-mail message
