@@ -2,7 +2,7 @@
 /**
  * @package     Joomla.Plugin
  * @subpackage  Content Notifier Task
- * @version     5.5
+ * @version     5.6
  * @copyright   Copyright (C) 2018-2024 Bruce Scherzinger. All rights reserved.
  * @license     GNU General Public License version 3
  */
@@ -67,15 +67,15 @@ class PlgTaskNotifierTask extends CMSPlugin implements SubscriberInterface
             $emailmode = emailMode($article);
 
             // Get the current date/time
-            $currdate = date('Y-m-d H-i-s');
+            $currdate = date('Y-m-d H:i:s');
             $publishdate = substr($article->publish_up,0,10);
 
             // This handler sends a notification for a published article that is preconditioned to email.
             // Note that the article must not just be published but its publish date must have passed.
             if ($article->state == 1 && $currdate >= $publishdate)
             {
-                // If there is no send-mode field or the user did not specify 'Do NOT Send', we can proceed.            
-                if (!$emailmode || $emailmode->Value != 'Do NOT Send')
+                // If there is no send-mode field or the user did not specify 'Do NOT Send', we can proceed.
+                if (!$emailmode || $emailmode->Value != 'Never')
                 {
                     // Reset the parameter to the default value if requested.
                     if ($emailmode) resetMode($emailmode);
@@ -99,13 +99,13 @@ class PlgTaskNotifierTask extends CMSPlugin implements SubscriberInterface
             $db = JFactory::getDBO();
 
             // Get the value of the send-mode field.
-            $query = "SELECT v.value as Value, f.id as Field, f.default_value as Reset, c.id as Item
+            $query = "SELECT v.value as `Value`, f.id as `Field`, f.default_value as `Default`, c.id as `Item`
                       FROM #__fields f 
                       LEFT JOIN #__fields_values v
                       ON f.id=v.field_id
                       LEFT JOIN #__content c
                       ON c.id=v.item_id 
-                      WHERE c.id=".$article->id." AND f.name='send-mode'";
+                      WHERE c.id=".$article->id." AND f.name LIKE '%send-mode'";
             $db->setQuery($query);
 
             // Return the necessary info
@@ -121,19 +121,19 @@ class PlgTaskNotifierTask extends CMSPlugin implements SubscriberInterface
          */
         function resetMode($fieldinfo)
         {
-            // If 'Send Once' was specified, reset the parameter to the default value.
-            if ($fieldinfo->Value == 'Send Once')
+            // If 'Send Just Once' was specified, reset the parameter to the default value.
+            if ($fieldinfo->Value == 'Once')
             {
                 // Get a database object
                 $db = JFactory::getDBO();
 
                 // Fields to update.
-                $fields = $db->quoteName('value') . ' = ' . $db->quote($fieldinfo->Reset);
-                
+                $fields = $db->quoteName('value') . " = 'Never'";
+
                 // Conditions for which records should be updated.
                 $conditions = array($db->quoteName('field_id') . ' = ' . $fieldinfo->Field,
                                     $db->quoteName('item_id')  . ' = ' . $db->quote($fieldinfo->Item));
-        
+
                 // Set the field back to its default value
                 $query = $db->getQuery(true);
                 $query->update($db->quoteName('#__fields_values'))->set($fields)->where($conditions);
@@ -158,7 +158,6 @@ class PlgTaskNotifierTask extends CMSPlugin implements SubscriberInterface
             // Get the parameters for the Content Notifier plugin
             $db = JFactory::getDBO();
             $db->setQuery("SELECT params FROM #__extensions WHERE folder='content' AND element='notifier'");
-            
             
             // Get the plug-in parameters
             $params = json_decode($db->loadResult(),false,20);
@@ -207,6 +206,12 @@ class PlgTaskNotifierTask extends CMSPlugin implements SubscriberInterface
             // Get a database object
             $db = JFactory::getDBO();
 
+            // Get the parameters for the Content Notifier plugin
+            $db->setQuery("SELECT params FROM #__extensions WHERE folder='content' AND element='notifier'");
+            
+            // Get the plug-in parameters
+            $params = json_decode($db->loadResult(),false,20);
+
             // See if we need to send this to the article author, the group address, or both.
             // If both, make the author the primary.
             $address = "";
@@ -214,13 +219,13 @@ class PlgTaskNotifierTask extends CMSPlugin implements SubscriberInterface
             $copied  = "";
 
             // Get article author info
-            $db->setQuery("SELECT * FROM #__users u JOIN #__comprofiler c WHERE u.id=c.id AND u.id=$article->created_by");
+            $db->setQuery("SELECT * FROM #__users u JOIN #__comprofiler c WHERE u.id=c.id AND u.id=".$article->created_by);
             $created_by = $db->loadObject();
 
             if ($group->recipients == "Address" || $group->recipients == "Both")
             {
                 // Add the admin address as a recipient. Allow admin address field to contain multiple addresses.
-                $address = ($group->address == "") ? $mainframe->getCfg('mailfrom') : $group->address;
+                $address = ($group->address == "") ? $mainframe->get('mailfrom') : $group->address;
                 $address = str_replace(" ","",$address);  // strip all spaces
             }
             if ($group->recipients == "Author" || $group->recipients == "Both")
@@ -249,21 +254,41 @@ class PlgTaskNotifierTask extends CMSPlugin implements SubscriberInterface
             {
                 // Get system email address
                 $from_name = $params->from_name;
-                if (!$from_name) $from_name = $mainframe->getCfg('fromname');
+                if (!$from_name) $from_name = $mainframe->get('fromname');
                 $from_addr = $params->from_addr;
-                if (!$from_addr) $from_addr = $mainframe->getCfg('mailfrom');
-        
+                if (!$from_addr) $from_addr = $mainframe->get('mailfrom');
+
                 // Get article category name
                 $db->setQuery("SELECT * FROM #__categories WHERE id=$article->catid");
                 $category = $db->loadObject();
                 $cat_alias = $category->alias;
                 $cat_title = $category->title;
 
-                // Build article links (Note: only works with Joomla 3.9 or later)
-                $rel_link = JRoute::link('site','index.php?option=com_content&view=article&id='.$article->id.'&catid='.$category->id);
-                $site_url = rtrim(JURI::root(),'/');
+                // Build article links (Note: only works with Joomla 3.9 or later).
+                $site_url = $params->get('siteurl');
+                if ($site_url == "")
+                    $site_url = rtrim(JURI::root(),'/');
+
+                // Build the relative link. Remove any reference to the backend.
+                $rel_link = JRoute::_(ContentHelperRoute::getArticleRoute($article->id,$article->catid));
+                $rel_link = preg_replace('#^/administrator#', '', $rel_link);
+
+                // See if we're using SEF URLs and convert if so.
+                $routerOptions = [];
+                $sef = $mainframe->get('sef');
+                if ($sef)
+                {
+                    $routerOptions['mode'] = 1;
+                    $router   = JRouter::getInstance('site', $routerOptions);
+                    $rel_link = $router->build($rel_link)->toString();
+                }
+
+                // Remove any non-URL reference to the CLI.
+                if (strpos($rel_link,"/component") !== false)
+                    $rel_link = substr($rel_link,0,strpos($rel_link,"/component"));
+
                 $abs_link = $site_url.$rel_link;
-        
+
                 // Replace notice message placeholders
                 if ($group->format == "HTML")
                 {
@@ -271,10 +296,6 @@ class PlgTaskNotifierTask extends CMSPlugin implements SubscriberInterface
                     $message = ($group->htmltemplate == "") ?
                         '<p>[CATEGORY] article [TITLE] has been [ACTION].</p><p>'.$abs_link.'</p>' :
                         $group->htmltemplate;
-                    if ($group->prepare_content == "1")
-                    {
-                        $message  = JHtml::_('content.prepare', $message);
-                    }
                 }
                 else
                 {
@@ -298,7 +319,7 @@ class PlgTaskNotifierTask extends CMSPlugin implements SubscriberInterface
                           '[MODIFIED]',
                           '[CREATED]',
                           '[AREA]'),
-                    array($mainframe->getCfg('sitename'),
+                    array($mainframe->get('sitename'),
                           $category->title,
                           'Article Sent',
                           $article->title,
@@ -322,7 +343,7 @@ class PlgTaskNotifierTask extends CMSPlugin implements SubscriberInterface
                           '[CATEGORY]',
                           '[TITLE]',
                           '[ACTION]'),
-                    array($mainframe->getCfg('sitename'),
+                    array($mainframe->get('sitename'),
                           $category->title,
                           $article->title,
                           "Article Sent"),
@@ -336,7 +357,7 @@ class PlgTaskNotifierTask extends CMSPlugin implements SubscriberInterface
                 $mailer->setSubject($subject);
                 $mailer->setBody($message);
                 $mailer->IsHTML($group->format == "HTML");
-        
+
                 // Send notification email to administrator
                 $mailer->Send();
             }

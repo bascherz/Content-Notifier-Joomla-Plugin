@@ -2,7 +2,7 @@
 <form>
 	<fields name="params">
 		<fieldset name="task_params">
-			<field name="query" type="textarea" label="PLG_TASK_NOTIFIERTASK_QUERY_LABEL" rows="5" cols="100" description="PLG_TASK_NOTIFIERTASK_QUERY_DESC" default="WHERE title LIKE '%issue%' AND state=1 AND NOT publish_up &lt;= NOW()) ORDER BY publish_up DESC" filter="raw" />
+			<field name="query" type="textarea" label="PLG_TASK_NOTIFIERTASK_QUERY_LABEL" rows="5" cols="100" description="PLG_TASK_NOTIFIERTASK_QUERY_DESC" default="WHERE alias LIKE '%-issue-%' AND state=1 AND NOW() >= publish_up) ORDER BY publish_up DESC" filter="raw" />
 		</fieldset>
 	</fields>
 </form>
