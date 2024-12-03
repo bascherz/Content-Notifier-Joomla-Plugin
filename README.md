@@ -1,4 +1,4 @@
-# Content-Notifier-Joomla-Plugin
+# Content Notifier Joomla Plugin
 Allows the site admin to "subscribe" any number of email addresses to receive emails when articles in selected categories are
 published or modified. And as of version 5.3, you can also use the Joomla! Task Scheduler to send your emails as well, provided
 you have the Community Builder Auto Actions plugin or you know how to create a Task yourself.
@@ -6,9 +6,15 @@ you have the Community Builder Auto Actions plugin or you know how to create a T
 ## Admininstrator Configuration
 You can create up to 1000 subscription groups. Each subscription group associates one or more article categories with one or
 more email addresses. Once the subscription group is enabled, any time an article is published or a published article is saved
-to one of those categories, an email is sent to the list of subscribed addresses. The email subject and body can contain placeholders
-for things such as the article title, category, article intro and full text, link to the article on the site, and modification date.
-Some of these tags only work in the email subject.
+to one of those categories (Group Enabled = 'Save'), an email is sent to the list of subscribed addresses. The email subject and body
+can contain placeholders for things such as the article title, category, article intro and full text, link to the article on the site,
+and modification date. Some of these tags only work in the email subject.
+
+## Content Notifier Task Joomla Plugin
+The Notifier Task plugin allows the administrator to use the Joomla Task Scheduler to periodically check to see if a single article
+in one of a subscription group's categories is ready to be emailed. This plugin uses the subscription groups specified in the
+Content Notifier Joomla Plugin, so using this plugin requires that one to be installed. Only subscription groups for which
+Group Enabled is set to 'Task' are checked by this plugin.
 
 ## Concept of Operation
 The idea behind this plugin is not to give your site users the ability to subscribe to individual article categories but, rather,
