@@ -2,8 +2,8 @@
 /**
  * @package     Joomla.Plugin
  * @subpackage  Content.Notifier
- * @version     5.6
- * @copyright   Copyright (C) 2018-2024 Bruce Scherzinger. All rights reserved.
+ * @version     5.7
+ * @copyright   Copyright (C) Bruce Scherzinger. All rights reserved.
  * @license     GNU General Public License version 3
  */
 
@@ -49,6 +49,11 @@ class PlgContentNotifier extends CMSPlugin
      */
     public function onContentAfterSave($context,&$article,$isNew)
     {
+        // Only operate on com_content context articles.
+        $contextlen = strpos($context,".") === FALSE ? strlen($context) : strpos($context,".");
+        $context = substr($context,0,$contextlen);
+        if ($context != "com_content") return false;
+        
         // If there is a send-mode custom field, get it and some other info
         $emailmode = $this->emailMode($article);
         $emailed = 'Email was NOT sent';

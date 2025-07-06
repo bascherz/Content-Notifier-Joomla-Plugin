@@ -2,16 +2,16 @@
 <extension type="plugin" group="content" method="upgrade">
     <name>Content - Notifier</name>
     <author>Bruce Scherzinger</author>
-    <creationDate>December 2024</creationDate>
-	<copyright>(C) 2004-2024 Bruce Scherzinger, all rights reserved</copyright>
+    <creationDate>July 2025</creationDate>
+	<copyright>(C) Bruce Scherzinger, all rights reserved</copyright>
 	<license>https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL version 3</license>
 	<authorEmail>bruce@scherzinger.org</authorEmail>
 	<authorUrl>https://scherzinger.org/</authorUrl>
-    <version>5.6</version>
-    <description>Content Notifier Plugin v5.6. Sends email notifications to designated email address(es) when articles are added to or modified in selected categories. ....................................................................................................... 
+    <version>5.7</version>
+    <description>Content Notifier Plugin v5.7. Sends email notifications to designated email address(es) when articles are added to or modified in selected categories. ....................................................................................................... 
     <![CDATA[
-            <h3>Content Notifier Plug-In v5.5</h3>
-            <address>&copy; 2024 Bruce Scherzinger</address>
+            <h3>Content Notifier Plug-In v5.7</h3>
+            <address>&copy; Bruce Scherzinger</address>
             <p>This plugin allows the site admin to subscribe/unsubscribe one or more email addresses to be
             notified when an article in selected categories is saved as published. The companion task scheduler
             plugin, Notifier Task Plugin, can alternatively trigger sending the notification at the specified interval or time.
