@@ -2,12 +2,12 @@
 <extension type="plugin" group="task" method="upgrade">
 	<name>plg_task_notifiertask</name>
 	<author>Bruce Scherzinger</author>
-    <creationDate>December 2024</creationDate>
-	<copyright>(C) 2004-2024 Bruce Scherzinger, all rights reserved</copyright>
+    <creationDate>July 2025</creationDate>
+	<copyright>(C) Bruce Scherzinger, all rights reserved</copyright>
 	<license>https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL version 3</license>
 	<authorEmail>bruce@scherzinger.org</authorEmail>
 	<authorUrl>https://scherzinger.org/</authorUrl>
-	<version>5.6</version>
+	<version>5.7</version>
 	<description>This plugin implements the 'Task' triggering option for the Content Notifier plugin.
 	<![CDATA[<strong>NOTE: REQUIRES THE CONTENT NOTIFIER PLUGIN TO WORK!</strong>]]></description>
 	<namespace path="src">Joomla\Plugin\Task\NotifierTask</namespace>
