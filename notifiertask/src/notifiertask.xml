@@ -7,7 +7,7 @@
 	<license>https://www.gnu.org/licenses/gpl-3.0.html GNU/GPL version 3</license>
 	<authorEmail>bruce@scherzinger.org</authorEmail>
 	<authorUrl>https://scherzinger.org/</authorUrl>
-	<version>5.7</version>
+	<version>5.7.1</version>
 	<description>This plugin implements the 'Task' triggering option for the Content Notifier plugin.
 	<![CDATA[<strong>NOTE: REQUIRES THE CONTENT NOTIFIER PLUGIN TO WORK!</strong>]]></description>
 	<namespace path="src">Joomla\Plugin\Task\NotifierTask</namespace>
