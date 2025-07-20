@@ -265,7 +265,7 @@ class PlgTaskNotifierTask extends CMSPlugin implements SubscriberInterface
                 $cat_title = $category->title;
 
                 // Build article links (Note: only works with Joomla 3.9 or later).
-                $site_url = $params->get('siteurl');
+                $site_url = $params->siteurl;
                 if ($site_url == "")
                     $site_url = rtrim(JURI::root(),'/');
 
