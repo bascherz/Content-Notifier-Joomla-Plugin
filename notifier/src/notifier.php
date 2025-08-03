@@ -232,7 +232,7 @@ class PlgContentNotifier extends CMSPlugin
         $copied  = "";
 
         // Get article author info
-        $db->setQuery("SELECT * FROM #__users u JOIN #__comprofiler c WHERE u.id=c.id AND u.id=$article->created_by");
+        $db->setQuery("SELECT * FROM #__users WHERE id=$article->created_by");
         $created_by = $db->loadObject();
 
         if ($group->recipients == "Address" || $group->recipients == "Both")
