@@ -2,7 +2,7 @@
 /**
  * @package     Joomla.Plugin
  * @subpackage  Content Notifier Task
- * @version     5.7
+ * @version     5.7.2
  * @copyright   Copyright (C) Bruce Scherzinger. All rights reserved.
  * @license     GNU General Public License version 3
  */
